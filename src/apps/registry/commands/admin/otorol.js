@@ -20,13 +20,18 @@ class ClickDel extends Responder {
      * @param {CommandInteraction} interaction
      */
     async run(client, interaction, data) {
-        const RoleMenu = new RoleSelectMenuBuilder().setCustomId("otorol").setPlaceholder("Otorol seçiniz").setMinValues(0).setMaxValues(10);
+        const Menus = [
+            new RoleSelectMenuBuilder().setCustomId("otorol").setPlaceholder("Otorol rolü").setMinValues(0).setMaxValues(5),
+            new RoleSelectMenuBuilder().setCustomId("stranger").setPlaceholder("Yabancı rolü").setMinValues(0).setMaxValues(5),
+            new RoleSelectMenuBuilder().setCustomId("guest").setPlaceholder("Ziyaretçi rolü").setMinValues(0).setMaxValues(5),
+            new RoleSelectMenuBuilder().setCustomId("member").setPlaceholder("Üye rolü").setMinValues(0).setMaxValues(5)
+        ].map((menu) => new ActionRowBuilder().addComponents(menu));
         const ConfirmButton = new ButtonBuilder().setCustomId("confirm").setLabel("onayla").setStyle(1);
         const CancelButton = new ButtonBuilder().setCustomId("cancel").setLabel("iptal").setStyle(4);
         const response = await interaction.reply({
             content: "Otorol seçiniz",
             components: [
-                new ActionRowBuilder().addComponents(RoleMenu),
+                ...Menus,
                 new ActionRowBuilder().addComponents(ConfirmButton, CancelButton)
             ]
         });
@@ -35,7 +40,7 @@ class ClickDel extends Responder {
             return true;
         }
         const collector = response.createMessageComponentCollector({ filter, time: 60_000 });
-        let roles = [];
+        let roles = { otorol: [], stranger: [], guest: [], member: [] }
         collector.on("collect", async (i) => {
             i.deferUpdate();
             if (i.customId === "confirm") {
@@ -56,13 +61,19 @@ class ClickDel extends Responder {
                     components: []
                 });
                 collector.stop();
-            } else if (i.customId === "otorol") {
-                roles = i.values;
+            } else {
+                roles[i.customId] = i.values;
             }
         });
         collector.on("end", async (collected) => {
-            roles.forEach(async (role) => {
-                await client.models.roles.findOneAndUpdate({ meta: { $elemMatch: { _id: role.id } } }, { keyConf: "otorol" });
+            if (collected.size === 0) {
+                await response.edit({
+                    content: "Otorol seçimi iptal edildi",
+                    components: []
+                });
+            }
+            Object.keys(roles).filter(rolename => roles[rolename].length > 0).forEach(async (key) => {
+                await client.models.roles.findOneAndUpdate({ meta: { $elemMatch: { _id: roles[key] } } }, { keyConf: key });
             });
         });
 

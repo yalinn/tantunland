@@ -39,27 +39,27 @@ class GuildMemberAdd extends ClientEvent {
         });
         const inviterMember = member.guild.members.cache.get(inviter);
         if (!inviterMember) {
-            const otorol = this.client.data.roles["otorol"];
+            const otorol = this.client.data.roles["autorol"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi bulunamadı").catch(e => console.log(e));
             }
         } else if (inviterMember.user.bot) {
-            const otorol = this.client.data.roles["yabancı"];
+            const otorol = this.client.data.roles["stranger"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi bot").catch(e => console.log(e));
             }
         } else if (inviterMember.user.id === member.id) {
-            const otorol = this.client.data.roles["yabancı"];
+            const otorol = this.client.data.roles["stranger"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi kendisi").catch(e => console.log(e));
             }
         } else if (inviterMember.roles.cache.has(this.client.data.roles["üye"])) {
-            const otorol = this.client.data.roles["misafir"];
+            const otorol = this.client.data.roles["guest"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi üye").catch(e => console.log(e));
             }
         } else if (inviterMember.user.id === member.guild.ownerId) {
-            const otorol = this.client.data.roles["üye"];
+            const otorol = this.client.data.roles["member"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi kurucu").catch(e => console.log(e));
             }
