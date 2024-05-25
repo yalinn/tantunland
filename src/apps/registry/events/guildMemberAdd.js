@@ -1,5 +1,5 @@
 const { GuildMember, Embed, EmbedBuilder } = require('discord.js');
-const { Bot, ClientEvent } = require('@/base/classes');
+const { Bot, ClientEvent } = require('../../../base/classes');
 
 class GuildMemberAdd extends ClientEvent {
 
