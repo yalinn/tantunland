@@ -1,4 +1,4 @@
-const { Message } = require('discord.js');
+const { Message, PermissionsBitField } = require('discord.js');
 const { ClientEvent, Bot } = require("../../../base/classes");
 class LinkBlockerUpdate extends ClientEvent {
 
@@ -21,7 +21,7 @@ class LinkBlockerUpdate extends ClientEvent {
         if (!message.guild) return;
         if (message.author.bot) return;
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];
-        if (message.member.permissions.has("ADMINISTRATOR")) return;
+        if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
         if (message.guild && elebaşı.some(link => message.content.includes(link))) {
             for (let c = 0; c < elebaşı.length; c++) {
                 message.content.split(" ").filter(s => s.includes(elebaşı[c])).map(s => s.split(elebaşı[c]).pop()).forEach(async (code) => {
