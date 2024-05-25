@@ -18,6 +18,7 @@ class InviteCreate extends ClientEvent {
     async run(invite) {
         this.client.invites = await invite.guild.invites.fetch();
         await this.client.guild.invites.fetch().then(async (invites) => {
+            this.client.invites = invites;
             await this.client.redis.set(`inv_guild:${invite.guild.id}`, JSON.stringify(invites));
         });
     }

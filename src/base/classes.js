@@ -32,6 +32,7 @@ class Bot extends Client {
         this.loader();
         this.dbConnect();
         this.responders = new Collection();
+        this.invites = new Collection();
         this.data = {
             roles: {},
             channels: {}

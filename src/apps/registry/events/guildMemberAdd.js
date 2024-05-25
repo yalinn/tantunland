@@ -19,9 +19,8 @@ class GuildMemberAdd extends ClientEvent {
     async run(member) {
         if (member.guild.id !== this.client.config.guildId) return;
 
-        const invites = await this.client.redis.get(`inv_guild:${member.guild.id}`).then((data) => JSON.parse(data));
-        const gInvites = await member.guild.invites.fetch({ cache: false });
-        const invite = invites.find((inv) => inv.uses < gInvites.get(inv.code)?.uses || !gInvites.has(inv.code));
+        const gInvites = await member.guild.invites.fetch({ cache: false })
+        const invite = this.client.invites.find((inv) => inv.uses < gInvites.get(inv.code)?.uses || !gInvites.has(inv.code));
         await member.guild.invites.fetch().then(async (invites) => {
             await this.client.redis.set(`inv_guild:${member.guild.id}`, JSON.stringify(invites.map(i => ({
                 uses: i.uses,
@@ -29,6 +28,7 @@ class GuildMemberAdd extends ClientEvent {
                 inviterId: i.inviterId
             }))));
         });
+        console.log(invite)
         let inviter = invite ? invite.inviterId : "VANITY_URL";
         await this.client.models.invites.create({
             guildId: member.guild.id,

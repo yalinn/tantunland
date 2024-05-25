@@ -18,6 +18,7 @@ class InviteDelete extends ClientEvent {
     async run(invite) {
         if (invite.guild.id !== this.client.config.guildId) return;
         await this.client.guild.invites.fetch().then(async (invites) => {
+            this.client.invites = invites;
             await this.client.redis.set(`inv_guild:${invite.guild.id}`, JSON.stringify(invites));
         });
         /* const entry = await invite.guild.fetchAuditLogs({ type: "INVITE_DELETE" }).then(logs => logs.entries.first());

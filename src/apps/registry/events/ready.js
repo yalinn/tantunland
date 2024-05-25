@@ -16,7 +16,8 @@ class Ready extends ClientEvent {
 	 * @param {Bot} client
 	 */
 	async run(client) {
-		await client.guild.invites.fetch().then(async (invites) => {
+		await client.guild.invites.fetch({ cache: false }).then(async (invites) => {
+			this.client.invites = invites;
 			await this.client.redis.set(`inv_guild:${client.config.guildId}`, JSON.stringify(invites));
 		}).catch(console.error);
 		if (this.client.guild.vanityURLCode) await client.guild.fetchVanityData().then(async (res) => {
