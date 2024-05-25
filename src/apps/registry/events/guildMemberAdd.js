@@ -38,6 +38,7 @@ class GuildMemberAdd extends ClientEvent {
             left: false
         });
         const inviterMember = member.guild.members.cache.get(inviter);
+        console.log(`${member.user.tag} katıldı. Davetçisi: ${inviterMember ? inviterMember.user.tag : "VANITY_URL"}`);
         if (!inviterMember) {
             const otorol = this.client.data.roles["autorol"];
             if (otorol && otorol.length > 0) {
