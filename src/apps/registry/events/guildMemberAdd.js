@@ -53,7 +53,7 @@ class GuildMemberAdd extends ClientEvent {
         });
         let description_lines = [];
         description_lines.push(`Aramıza hoş geldin ${member.user}!`)
-        const staff = member.guild.members.cache.filter(m => m.roles.cache.has(this.client.data.roles["staff"]));
+        const staff = member.guild.members.cache.filter(m => this.client.data.roles["staff"]?.some(r => m.roles.cache.has(r)));
         const staffs = {
             online: staff?.filter(m => m.presence.status !== "offline").size,
             in_voice: staff.filter(m => m.voice.channel).size,
