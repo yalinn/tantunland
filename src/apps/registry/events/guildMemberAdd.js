@@ -75,6 +75,8 @@ class GuildMemberAdd extends ClientEvent {
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
                     \`\`\`Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.\`\`\``
                 );
+            } else {
+                description_lines.push(stripIndents`\`\`\`Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.\`\`\``);
             }
         } else if (inviterMember.user.bot) {
             const otorol = this.client.data.roles["stranger"];
@@ -93,6 +95,8 @@ class GuildMemberAdd extends ClientEvent {
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
                     \`\`\`Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.\`\`\``
                 );
+            } else {
+                description_lines.push(stripIndents`\`\`\`Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.\`\`\``);
             }
         } else if (inviterMember.user.id === member.id) {
             const otorol = this.client.data.roles["stranger"];
@@ -111,6 +115,8 @@ class GuildMemberAdd extends ClientEvent {
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
                     \`\`\`Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.\`\`\``
                 );
+            } else {
+                description_lines.push(stripIndents`\`\`\`Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.\`\`\``);
             }
         } else if (inviterMember.roles.cache.has(this.client.data.roles["üye"])) {
             const otorol = this.client.data.roles["guest"];
