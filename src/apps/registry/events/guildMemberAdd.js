@@ -46,8 +46,11 @@ class GuildMemberAdd extends ClientEvent {
             "autorol": "#3498db"
         }
         const embed = new EmbedBuilder();
-        embed.setAuthor(`${member.user.username} [${member.user.id}]`, member.user.displayAvatarURL());
-        embed.setFooter(`Davetçi: ${inviterMember ? inviterMember.user.username : "VANITY_URL"}`);
+        embed.setAuthor({ name: `${member.user.username} [${member.user.id}]`, iconURL: member.user.displayAvatarURL() });
+        embed.setFooter({
+            text: `Davetçi: ${inviterMember ? inviterMember.user.username : "VANITY_URL"}`,
+            iconURL: inviterMember ? inviterMember.user.displayAvatarURL() : member.guild.iconURL()
+        });
         let description_lines = [];
         description_lines.push(`Aramıza hoş geldin ${member.user}!`)
         const staff = member.guild.roles.cache.get(this.client.data.roles["staff"]);
