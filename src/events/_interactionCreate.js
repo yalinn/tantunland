@@ -74,7 +74,7 @@ class IntCreateEvent extends ClientEvent {
             ephemeral: true
         });
         try {
-            await cmd.run(this.client, interaction, this.client.data);
+            await cmd.run(this.client, interaction, this.data);
             console.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.conf.name}]`, "cmd");
             cmd.cooldown.set(interaction.user.id, Date.now());
         } catch (e) {
