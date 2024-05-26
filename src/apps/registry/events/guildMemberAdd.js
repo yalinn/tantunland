@@ -128,7 +128,7 @@ class GuildMemberAdd extends ClientEvent {
             description_lines.push(`Sunucunun kurucusu tarafından davet edildiğin için otomatik olarak __üye__ olarak kayıt edildin.`);
         }
         embed.setDescription(description_lines.join("\n"));
-        await member.guild.channels.cache.get(this.client.data.channels["welcome"]).send(embed);
+        await member.guild.channels.cache.get(this.data.channels["welcome"]).send(embed);
     }
 }
 
