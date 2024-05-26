@@ -119,13 +119,15 @@ class Bot extends Client {
         });
         await this.models.channels.find({ keyConf: { $ne: null } }).then((docs) => {    // "$ne" = "(N)ot (E)quals to"
             docs.forEach((doc) => {
-                let values = this.data["channels"][doc.keyConf] || [];
-                this.data["channels"][doc.keyConf] = values.concat([doc.meta.pop().id]);
-                if (this.guild) this.data["channels"][doc.keyConf] = this.data["channels"][doc.keyConf].filter((id) => this.guild.channels.cache.has(id));
+                if (this.guild && !this.guild.channels.cache.has(doc.meta.pop().id)) {
+                    this.models.channels.updateOne({ _id: doc._id }, { $keyConf: null });
+                } else {
+                    this.data["channels"][doc.keyConf] = doc.meta.pop().id;
+                }
             });
         });
-        await this.redis.set("atl_id_data", JSON.stringify(this.data));
-        this.data = await this.redis.get("atl_id_data").then((raw) => JSON.parse(raw));
+        await this.redis.set("ttl_id_data", JSON.stringify(this.data));
+        this.data = await this.redis.get("ttl_id_data").then((raw) => JSON.parse(raw));
         return this.data;
     }
 
