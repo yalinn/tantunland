@@ -40,7 +40,7 @@ class ClickDel extends Responder {
      * @param {CommandInteraction} interaction
      */
     async run(client, interaction, data) {
-        const channelType = interaction.options.getString("kanal_tipi");
+        const channelType = interaction.options.getString("anahtar");
         const channel = interaction.options.getChannel("atanan_kanal");
         if (!channel) return interaction.reply("Kanal bulunamadı");
         if (!interaction.guild.channels.cache.get(channel.id)) return interaction.reply("Kanal bulunamadı");
