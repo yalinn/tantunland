@@ -44,6 +44,7 @@ class ClickDel extends Responder {
         const channel = interaction.options.getChannel("atanan_kanal");
         if (!channel) return interaction.reply("Kanal bulunamadı");
         if (!interaction.guild.channels.cache.get(channel.id)) return interaction.reply("Kanal bulunamadı");
+        await client.models.channels.updateMany({ keyConf: channelType }, { keyConf: null });
         await client.models.channels.findOneAndUpdate({ meta: { $elemMatch: { id: channel.id } } }, { $set: { keyConf: channelType } }, { upsert: true });
         interaction.reply({
             content: "Kanal ayarları yapıldı",
