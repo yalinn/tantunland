@@ -40,9 +40,9 @@ class GuildMemberAdd extends ClientEvent {
         console.log(`${member.user.tag} katıldı. Davetçisi: ${inviterMember ? inviterMember.user.username : "VANITY_URL"}`);
         const colors = {
             "member": "#2ecc71",
-            "guest": "#f1c40f",
-            "stranger": "#e74c3c",
-            "autorol": "#3498db"
+            "guest": "#3498db",
+            "stranger": "#f1c40f",
+            "autorol": "#e74c3c"
         }
         const embed = new EmbedBuilder();
         embed.setAuthor({ name: `${member.user.username} [${member.user.id}]`, iconURL: member.user.displayAvatarURL() });
