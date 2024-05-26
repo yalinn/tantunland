@@ -53,10 +53,10 @@ class GuildMemberAdd extends ClientEvent {
         });
         let description_lines = [];
         description_lines.push(`Aramıza hoş geldin ${member.user}!`)
-        const staff = member.guild.members.cache.filter(m => this.client.data.roles["staff"]?.some(r => m.roles.cache.has(r)));
+        const staff = member.guild.members.cache.filter(m => !m.user.bot && this.client.data.roles["staff"]?.some(r => m.roles.cache.has(r)));
         const staffs = {
-            online: staff?.filter(m => m.presence.status !== "offline").size,
-            in_voice: staff.filter(m => m.voice.channel).size,
+            online: staff?.filter(m => m.presence && m.presence.status !== "offline").size,
+            in_voice: staff.filter(m => m.voice && m.voice.channel).size,
         }
         if (!inviterMember) {
             const otorol = this.client.data.roles["autorol"];
@@ -68,15 +68,15 @@ class GuildMemberAdd extends ClientEvent {
             if (staffs.in_voice > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                \`\`\`Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.\`\`\``
+                    <a:vertex:1241402933854339093> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
                 );
             } else if (staffs.online > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    \`\`\`Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.\`\`\``
+                    <a:vertex:1241402933854339093> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
                 );
             } else {
-                description_lines.push(stripIndents`\`\`\`Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.\`\`\``);
+                description_lines.push(stripIndents`<a:vertex:1241402933854339093> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
             }
         } else if (inviterMember.user.bot) {
             const otorol = this.client.data.roles["stranger"];
@@ -88,15 +88,15 @@ class GuildMemberAdd extends ClientEvent {
             if (staffs.in_voice > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                \`\`\`Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.\`\`\``
+                    <a:vertex:1241402933854339093> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
                 );
             } else if (staffs.online > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    \`\`\`Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.\`\`\``
+                    <a:vertex:1241402933854339093> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
                 );
             } else {
-                description_lines.push(stripIndents`\`\`\`Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.\`\`\``);
+                description_lines.push(stripIndents`<a:vertex:1241402933854339093> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
             }
         } else if (inviterMember.user.id === member.id) {
             const otorol = this.client.data.roles["stranger"];
@@ -108,15 +108,15 @@ class GuildMemberAdd extends ClientEvent {
             if (staffs.in_voice > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                \`\`\`Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.\`\`\``
+                    <a:vertex:1241402933854339093> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
                 );
             } else if (staffs.online > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    \`\`\`Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.\`\`\``
+                    <a:vertex:1241402933854339093> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
                 );
             } else {
-                description_lines.push(stripIndents`\`\`\`Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.\`\`\``);
+                description_lines.push(stripIndents`<a:vertex:1241402933854339093> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
             }
         } else if (inviterMember.roles.cache.has(this.client.data.roles["üye"])) {
             const otorol = this.client.data.roles["guest"];
