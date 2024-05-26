@@ -38,7 +38,7 @@ class GuildMemberAdd extends ClientEvent {
             left: false
         });
         const inviterMember = member.guild.members.cache.get(inviter);
-        console.log(`${member.user.tag} katıldı. Davetçisi: ${inviterMember ? inviterMember.user.username : "VANITY_URL"}`);
+        console.log(`${member.user.tag} katıldı. Davetçisi: ${inviterMember ? inviterMember.user.username : "Sunucu url'si"}`);
         const colors = {
             "member": "#2ecc71",
             "guest": "#3498db",
@@ -48,11 +48,11 @@ class GuildMemberAdd extends ClientEvent {
         const embed = new EmbedBuilder();
         embed.setAuthor({ name: `${member.user.username} [${member.user.id}]`, iconURL: member.user.displayAvatarURL() });
         embed.setFooter({
-            text: `Davetçi: ${inviterMember ? inviterMember.user.username : "VANITY_URL"}`,
+            text: `Davetçi: ${inviterMember ? inviterMember.user.username : "Sunucu url'si"}`,
             iconURL: inviterMember ? inviterMember.user.displayAvatarURL() : member.guild.iconURL()
         });
         let description_lines = [];
-        description_lines.push(`Aramıza hoş geldin ${member.user}!`)
+        description_lines.push(`<a:boom:1241402880506728468> Aramıza hoş geldin ${member.user}!`)
         const staff = member.guild.members.cache.filter(m => !m.user.bot && this.client.data.roles["staff"]?.some(r => m.roles.cache.has(r)));
         const staffs = {
             online: staff?.filter(m => m.presence && m.presence.status !== "offline").size,
@@ -64,19 +64,19 @@ class GuildMemberAdd extends ClientEvent {
                 await member.roles.add(otorol, "davetçisi bulunamadı").catch(e => console.log(e));
             }
             embed.setColor(colors["autorol"]);
-            description_lines.push(`Sunucuya katıldığın için teşekkür ederiz. Davetçin bulunamadığı için __kayıtsız__ rolünü aldın.`);
+            description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. Davetçin bulunamadığı için __kayıtsız__ rolünü aldın.`);
             if (staffs.in_voice > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    <a:vertex:1241402933854339093> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
+                    <a:gears_golden:1241402786684473355> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
                 );
             } else if (staffs.online > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    <a:vertex:1241402933854339093> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
+                    <a:gears_golden:1241402786684473355> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
                 );
             } else {
-                description_lines.push(stripIndents`<a:vertex:1241402933854339093> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
+                description_lines.push(stripIndents`<a:gears_golden:1241402786684473355> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
             }
         } else if (inviterMember.user.bot) {
             const otorol = this.client.data.roles["stranger"];
@@ -84,19 +84,19 @@ class GuildMemberAdd extends ClientEvent {
                 await member.roles.add(otorol, "davetçisi bot").catch(e => console.log(e));
             }
             embed.setColor(colors["stranger"]);
-            description_lines.push(`Sunucuya katıldığın için teşekkür ederiz. Site üzerinden katılım sağladığın için __yabancı__ rolünü aldın.`);
+            description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. Site üzerinden katılım sağladığın için __yabancı__ rolünü aldın.`);
             if (staffs.in_voice > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    <a:vertex:1241402933854339093> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
+                    <a:gears_golden:1241402786684473355> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
                 );
             } else if (staffs.online > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    <a:vertex:1241402933854339093> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
+                    <a:gears_golden:1241402786684473355> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
                 );
             } else {
-                description_lines.push(stripIndents`<a:vertex:1241402933854339093> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
+                description_lines.push(stripIndents`<a:gears_golden:1241402786684473355> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
             }
         } else if (inviterMember.user.id === member.id) {
             const otorol = this.client.data.roles["stranger"];
@@ -104,19 +104,19 @@ class GuildMemberAdd extends ClientEvent {
                 await member.roles.add(otorol, "davetçisi kendisi").catch(e => console.log(e));
             }
             embed.setColor(colors["stranger"]);
-            description_lines.push(`Sunucuya katıldığın için teşekkür ederiz. Kendi davetinle katıldığın için __yabancı__ rolünü aldın.`);
+            description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. Kendi davetinle katıldığın için __yabancı__ rolünü aldın.`);
             if (staffs.in_voice > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    <a:vertex:1241402933854339093> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
+                    <a:gears_golden:1241402786684473355> Sunucuda ${staffs.in_voice} yetkili seslide, ${staffs.online} yetkili çevrimiçi.`
                 );
             } else if (staffs.online > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
-                    <a:vertex:1241402933854339093> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
+                    <a:gears_golden:1241402786684473355> Sunucuda ${staffs.online} yetkili çevrimiçi fakat hiçbiri ses kanalında değil.`
                 );
             } else {
-                description_lines.push(stripIndents`<a:vertex:1241402933854339093> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
+                description_lines.push(stripIndents`<a:gears_golden:1241402786684473355> Şuan sunucuda aktif yetkili bulunmamaktadır. Yetkililer çevrimdışı olduğunda kayıt olamazsınız.`);
             }
         } else if (inviterMember.roles.cache.has(this.client.data.roles["üye"])) {
             const otorol = this.client.data.roles["guest"];
@@ -124,14 +124,14 @@ class GuildMemberAdd extends ClientEvent {
                 await member.roles.add(otorol, "davetçisi üye").catch(e => console.log(e));
             }
             embed.setColor(colors["guest"]);
-            description_lines.push(`Sunucuya katıldığın için teşekkür ederiz. ${inviterMember} tarafından davet edildiği için __misafir__ olarak kayıt edildin`);
+            description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. ${inviterMember} tarafından davet edildiği için __misafir__ olarak kayıt edildin`);
         } else if (inviterMember.user.id === member.guild.ownerId) {
             const otorol = this.client.data.roles["member"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi kurucu").catch(e => console.log(e));
             }
             embed.setColor(colors["member"]);
-            description_lines.push(`Sunucunun kurucusu tarafından davet edildiğin için otomatik olarak __üye__ olarak kayıt edildin.`);
+            description_lines.push(`<a:gears_golden:1241402786684473355> Sunucunun kurucusu tarafından davet edildiğin için otomatik olarak __üye__ olarak kayıt edildin.`);
         }
         embed.setDescription(description_lines.join("\n"));
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send({
