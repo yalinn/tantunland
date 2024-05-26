@@ -22,6 +22,7 @@ class GuildMemberAdd extends ClientEvent {
         const gInvites = await member.guild.invites.fetch({ cache: false })
         const invite = this.client.invites.find((inv) => inv.uses < gInvites.get(inv.code)?.uses || !gInvites.has(inv.code));
         await member.guild.invites.fetch().then(async (invites) => {
+            this.client.invites = invites;
             await this.client.redis.set(`inv_guild:${member.guild.id}`, JSON.stringify(invites.map(i => ({
                 uses: i.uses,
                 code: i.code,
