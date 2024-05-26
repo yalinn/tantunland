@@ -35,7 +35,6 @@ class LinkBlockerUpdate extends ClientEvent {
                             await message.delete();
                         }
                     } catch (error) {
-                        console.log("Unkown invite link.")
                         await message.member.timeout(1000 * 60 * 60 * 24, "Reklam yapma!").catch(console.error);
                         await message.delete();
                     }
