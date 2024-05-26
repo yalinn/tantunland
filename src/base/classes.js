@@ -119,10 +119,11 @@ class Bot extends Client {
         });
         await this.models.channels.find({ keyConf: { $ne: null } }).then((docs) => {    // "$ne" = "(N)ot (E)quals to"
             docs.forEach((doc) => {
-                if (this.guild && !this.guild.channels.cache.has(doc.meta.pop().id)) {
-                    this.models.channels.updateOne({ _id: doc._id }, { $keyConf: null });
+                const channel_id = doc.meta.pop().id;
+                if (this.guild && !this.guild.channels.cache.has(channel_id)) {
+                    this.models.channels.updateOne({ _id: doc._id }, { $set: { keyConf: null } });
                 } else {
-                    this.data["channels"][doc.keyConf] = doc.meta.pop().id;
+                    this.data["channels"][doc.keyConf] = channel_id;
                 }
             });
         });
@@ -212,7 +213,7 @@ class ClientEvent {
 
     async exec(...args) {
         //this.data = await this.client.redis.get("atl_id_data").then((raw) => JSON.parse(raw));
-        this.data = this.client.initializeData();
+        this.data = await this.client.initializeData();
         if (this.conf.action) {
             this.isAuthed = await this.client.guild.fetchAuditLogs({ type: AuditLogEvent[this.conf.action] }).then(async (audit) => {
                 this.audit = audit.entries.first();

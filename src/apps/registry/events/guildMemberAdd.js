@@ -19,7 +19,6 @@ class GuildMemberAdd extends ClientEvent {
      */
     async run(member) {
         if (member.guild.id !== this.client.config.guildId) return;
-
         const gInvites = await member.guild.invites.fetch({ cache: false })
         const invite = this.client.invites.find((inv) => inv.uses < gInvites.get(inv.code)?.uses || !gInvites.has(inv.code));
         await member.guild.invites.fetch().then(async (invites) => {
@@ -64,7 +63,7 @@ class GuildMemberAdd extends ClientEvent {
                 await member.roles.add(otorol, "davetçisi bulunamadı").catch(e => console.log(e));
             }
             embed.setColor(colors["autorol"]);
-            description_lines.push(`Sunucuya katıldığın için teşekkür ederiz. Davetçin bulunamadığı için __otomatik rol__ olarak kayıt edildin.`);
+            description_lines.push(`Sunucuya katıldığın için teşekkür ederiz. Davetçin bulunamadığı için __kayıtsız__ rolünü aldın.`);
             if (staffs.in_voice > 0) {
                 description_lines.push(
                     stripIndents`Lütfen kayıt olmak için bir yetkiliye ulaşın.
@@ -128,7 +127,9 @@ class GuildMemberAdd extends ClientEvent {
             description_lines.push(`Sunucunun kurucusu tarafından davet edildiğin için otomatik olarak __üye__ olarak kayıt edildin.`);
         }
         embed.setDescription(description_lines.join("\n"));
-        await member.guild.channels.cache.get(this.data.channels["welcome"]).send(embed);
+        await member.guild.channels.cache.get(this.data.channels["welcome"]).send({
+            embeds: [embed]
+        });
     }
 }
 
