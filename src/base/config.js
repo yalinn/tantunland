@@ -9,7 +9,8 @@ module.exports = {
         redis: process.env.redis_url,
         options: {
             authSource: "admin",
-            dbName: "Tantunland"
+            dbName: "Tantunland",
+            replicaSet: "rs1",
         }
     },
     roots: [        // her işlem için izinli id'ler
