@@ -62,7 +62,7 @@ class IntCreateEvent extends ClientEvent {
                 ephemeral: true
             });
         }
-        if (cmd.props.permissions.length > 0 && !cmd.props.permissions.map((k) => this.data.roles[k]).some(roleId => interaction.member.roles.cache.has(roleId))) {
+        if (cmd.props.permissions.length > 0 && !cmd.props.permissions.map((k) => this.data.roles[k]).some(roleId => interaction.member.roles.cache.has(roleId)) || !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
             return await interaction.reply({
                 content: `Bu komutu kullanacak yetkiye sahip değilsin.`,
                 ephemeral: true
