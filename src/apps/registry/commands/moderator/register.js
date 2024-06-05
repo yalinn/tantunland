@@ -22,7 +22,7 @@ class ClickDel extends Responder {
      * @param {UserContextMenuCommandInteraction} interaction
      */
     async run(client, interaction, data) {
-        if (!interaction.guild.roles.cache.has(data["roles"]["member"])) return interaction.reply({
+        if (!data["roles"]["member"].some(r => interaction.guild.roles.cache.has(r))) return interaction.reply({
             content: "Üye rolü bulunamadı",
             ephemeral: true
         });
