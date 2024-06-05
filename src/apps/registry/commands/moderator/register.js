@@ -46,7 +46,7 @@ class ClickDel extends Responder {
             data["roles"]["autorol"]
         ];
         const member_removal = stranger_roles.filter(r => member.roles.cache.has(r));
-        await member.roles.remove(stranger_roles);
+        if (stranger_roles.some(r => member.roles.cache.has(r))) await member.roles.remove(stranger_roles.filter(r => member.roles.cache.has(r)));
         await member.roles.add(data["roles"]["member"]);
         client.models.registry.create({
             userId: interaction.targetUser.id,
