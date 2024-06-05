@@ -1,8 +1,7 @@
 const Discord = require('discord.js');
 const { stripIndents } = require("common-tags");
 const chp = require("child_process");
-const { Bot } = require("../../../../base/bot");
-const { Responder } = require("../../../../base/classes");
+const { Responder, Bot } = require("../../../../base/classes");
 class Eval extends Responder {
 
     constructor(client) {
