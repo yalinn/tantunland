@@ -113,7 +113,7 @@ class Bot extends Client {
         await this.models.roles.find({ keyConf: { $ne: null } }).then((docs) => {       // "$ne" = "(N)ot (E)quals to"
             docs.forEach((doc) => {
                 let values = this.data["roles"][doc.keyConf] || [];
-                this.data["roles"][doc.keyConf] = values.concat([doc.meta.pop()._id]);
+                if (!this.data["roles"][doc.keyConf].includes(doc.meta.pop._id)) this.data["roles"][doc.keyConf] = values.concat([doc.meta.pop()._id]);
                 if (this.guild) this.data["roles"][doc.keyConf] = this.data["roles"][doc.keyConf].filter((id) => this.guild.roles.cache.has(id));
             });
         });
