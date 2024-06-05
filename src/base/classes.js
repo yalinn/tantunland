@@ -114,7 +114,7 @@ class Bot extends Client {
             docs.forEach((doc) => {
                 let values = this.data["roles"][doc.keyConf] || [];
                 const roleId = doc.meta.pop().id;
-                if (!values.includes(roleId)) this.data["roles"][doc.keyConf] = values.push(roleId);
+                if (!values.includes(roleId)) this.data["roles"][doc.keyConf] = values.concat([roleId]);
                 if (this.guild) this.data["roles"][doc.keyConf] = this.data["roles"][doc.keyConf].filter((id) => this.guild.roles.cache.has(id));
             });
         });
