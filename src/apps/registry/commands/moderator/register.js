@@ -1,4 +1,4 @@
-const { Message, CommandInteraction, UserContextMenuCommandInteraction } = require('discord.js');
+const { Message, CommandInteraction, UserContextMenuCommandInteraction, EmbedBuilder } = require('discord.js');
 const { Bot, Responder } = require('../../../../base/classes');
 const { stripIndent } = require('common-tags');
 class ClickDel extends Responder {
@@ -48,7 +48,7 @@ class ClickDel extends Responder {
         const member_removal = stranger_roles.filter(r => member.roles.cache.has(r));
         if (stranger_roles.some(r => member.roles.cache.has(r))) await member.roles.remove(stranger_roles.filter(r => member.roles.cache.has(r)));
         await member.roles.add(data["roles"]["member"]);
-        client.models.registry.create({
+        await client.models.registry.create({
             userId: interaction.targetUser.id,
             staffId: interaction.user.id,
             fromRoleId: member_removal
