@@ -57,8 +57,7 @@ class ClickDel extends Responder {
             content: "Kullanıcıya rol verildi",
             embeds: [
                 new EmbedBuilder().setTitle("Rol verme").setDescription(stripIndent`
-                    Kullanıcı: ${member}
-                    Rol: ${role}
+                kullanıcı kaydedildi
                 `)
             ]
         });
