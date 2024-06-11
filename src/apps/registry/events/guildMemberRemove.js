@@ -16,8 +16,8 @@ class GuildMemberRemove extends ClientEvent {
      * @param {GuildMember} member
      */
     async run(member) {
-        const memberData = await this.client.models.member.findOne({ memberId: member.id, guildId: member.guild.id, left: false });
-        await this.client.models.member.updateOne({ _id: memberData._id }, { $set: { roles: [] } });
+        const memberData = await this.client.models.member.findOne({ _id: member.id });
+        await this.client.models.member.updateOne({ _id: member.id }, { $set: { roles: [] } });
         const inviteData = await this.client.models.invites.findOne({ memberId: member.id, guildId: member.guild.id, left: false });
         if (!inviteData) return;
         await this.client.models.invites.updateMany({ invitedId: member.id, guildId: member.guild.id, left: false }, { $set: { left: true } });
