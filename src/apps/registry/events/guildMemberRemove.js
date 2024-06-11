@@ -1,4 +1,4 @@
-const { GuildMember } = require('discord.js');
+const { GuildMember, EmbedBuilder } = require('discord.js');
 const { ClientEvent, Bot } = require("../../../base/classes");
 class GuildMemberRemove extends ClientEvent {
 
@@ -39,8 +39,7 @@ class GuildMemberRemove extends ClientEvent {
         if (!welcome_channel) return;
         const message = await welcome_channel.messages.fetch(inviteData.message_id);
         if (!message) return;
-        const embed = message.embeds[0];
-        embed.setColor(colors[the_role]);
+        let embed = new EmbedBuilder(message.embeds[0]).setColor(colors[the_role]);
         await message.edit({ embeds: [embed] });
     }
 }
