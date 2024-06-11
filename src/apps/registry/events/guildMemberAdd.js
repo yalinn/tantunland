@@ -133,7 +133,7 @@ class GuildMemberAdd extends ClientEvent {
                 await this.client.models.registry.create({
                     userId: member.user.id,
                     staffId: inviterMember.user.id,
-                    fromRoleId: member_removal
+                    fromRoleId: "guest",
                 });
             }
             embed.setColor(colors["member"]);
