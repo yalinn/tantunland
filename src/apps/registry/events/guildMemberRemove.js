@@ -18,14 +18,14 @@ class GuildMemberRemove extends ClientEvent {
     async run(member) {
         const memberData = await this.client.models.member.findOne({ _id: member.id });
         await this.client.models.member.updateOne({ _id: member.id }, { $set: { roles: [] } });
-        const inviteData = await this.client.models.invites.findOne({ memberId: member.id, guildId: member.guild.id, left: false });
+        const inviteData = await this.client.models.invites.findOne({ invitedId: member.id, guildId: member.guild.id, left: false });
         if (!inviteData) {
             console.log(`${member.user.tag} sunucudan ayrıldı. Davetçisi bulunamadı.`);
             return;
         }
         await this.client.models.invites.updateMany({ invitedId: member.id, guildId: member.guild.id, left: false }, { $set: { left: true } });
         if (!memberData) {
-            console.log(`${member.user.tag} sunucudan ayrıldı. Davetçisi bulunamadı.`);
+            console.log(`${member.user.tag} sunucudan ayrıldı. Üyelik bulunamadı.`);
             return;
         }
         const colors = {
