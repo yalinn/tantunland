@@ -34,8 +34,7 @@ class GuildMemberRemove extends ClientEvent {
             stranger: "#ff5349",
             autorole: "#800000",
         }
-        const the_role = Object.keys(colors).find(r => member.roles.cache.has(this.data.roles[r]));
-        if (!the_role) the_role = "autorole";
+        const the_role = Object.keys(colors).find(r => member.roles.cache.has(this.data.roles[r])) || "autorole";
         const welcome_channel = member.guild.channels.cache.get(inviteData.channel_id);
         if (!welcome_channel) return;
         const message = await welcome_channel.messages.fetch(inviteData.message_id);
