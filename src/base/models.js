@@ -73,6 +73,8 @@ module.exports = {
         inviterId: String,
         invitedId: String,
         urlCode: String,
+        message_id: { type: String, default: null },
+        channel_id: { type: String, default: null },
         left: Boolean
     }, {
         timestamps: {

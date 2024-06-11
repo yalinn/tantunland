@@ -30,20 +30,21 @@ class GuildMemberAdd extends ClientEvent {
             }))));
         });
         let inviter = invite ? invite.inviterId : "VANITY_URL";
-        await this.client.models.invites.create({
+        const doc = await this.client.models.invites.create({
             guildId: member.guild.id,
             inviterId: inviter,
             invitedId: member.id,
             urlCode: invite ? invite.code : member.guild.vanityURLCode || "",
-            left: false
+            left: false,
+            message_id: null
         });
         const inviterMember = member.guild.members.cache.get(inviter);
         console.log(`${member.user.tag} katıldı. Davetçisi: ${inviterMember ? inviterMember.user.username : "Sunucu url'si"}`);
         const colors = {
-            "member": "#2ecc71",
-            "guest": "#3498db",
-            "stranger": "#f1c40f",
-            "autorol": "#e74c3c"
+            "member": "#32cd32",
+            "guest": "#DFFF00",
+            "stranger": "#9acd32",
+            "autorol": "#008000"
         }
         const embed = new EmbedBuilder();
         embed.setAuthor({ name: `${member.user.username} [${member.user.id}]`, iconURL: member.user.displayAvatarURL() });
@@ -61,7 +62,7 @@ class GuildMemberAdd extends ClientEvent {
         if (!inviterMember) {
             const otorol = this.client.data.roles["autorol"];
             if (otorol && otorol.length > 0) {
-                await member.roles.add(otorol, "davetçisi bulunamadı").catch(e => console.log(e));
+                await member.roles.add(otorol, "davetçisi bulunamadı").catch(console.log);
             }
             embed.setColor(colors["autorol"]);
             description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. Davetçin bulunamadığı için __kayıtsız__ rolünü aldın.`);
@@ -81,7 +82,7 @@ class GuildMemberAdd extends ClientEvent {
         } else if (inviterMember.user.bot) {
             const otorol = this.client.data.roles["stranger"];
             if (otorol && otorol.length > 0) {
-                await member.roles.add(otorol, "davetçisi bot").catch(e => console.log(e));
+                await member.roles.add(otorol, "davetçisi bot").catch(console.log);
             }
             embed.setColor(colors["stranger"]);
             description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. Site üzerinden katılım sağladığın için __yabancı__ rolünü aldın.`);
@@ -101,7 +102,7 @@ class GuildMemberAdd extends ClientEvent {
         } else if (inviterMember.user.id === member.id) {
             const otorol = this.client.data.roles["stranger"];
             if (otorol && otorol.length > 0) {
-                await member.roles.add(otorol, "davetçisi kendisi").catch(e => console.log(e));
+                await member.roles.add(otorol, "davetçisi kendisi").catch(console.log);
             }
             embed.setColor(colors["stranger"]);
             description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. Kendi davetinle katıldığın için __yabancı__ rolünü aldın.`);
@@ -121,22 +122,30 @@ class GuildMemberAdd extends ClientEvent {
         } else if (inviterMember.roles.cache.has(this.client.data.roles["üye"])) {
             const otorol = this.client.data.roles["guest"];
             if (otorol && otorol.length > 0) {
-                await member.roles.add(otorol, "davetçisi üye").catch(e => console.log(e));
+                await member.roles.add(otorol, "davetçisi üye").catch(console.log);
             }
             embed.setColor(colors["guest"]);
             description_lines.push(`<a:peace_out:1241402980390141994> Sunucuya katıldığın için teşekkür ederiz. ${inviterMember} tarafından davet edildiği için __misafir__ olarak kayıt edildin`);
         } else if (inviterMember.user.id === member.guild.ownerId) {
             const otorol = this.client.data.roles["member"];
             if (otorol && otorol.length > 0) {
-                await member.roles.add(otorol, "davetçisi kurucu").catch(e => console.log(e));
+                await member.roles.add(otorol, "davetçisi kurucu").catch(console.log);
+                await client.models.registry.create({
+                    userId: member.user.id,
+                    staffId: interaction.user.id,
+                    fromRoleId: member_removal
+                });
             }
             embed.setColor(colors["member"]);
             description_lines.push(`<a:gears_golden:1241402786684473355> Sunucunun kurucusu tarafından davet edildiğin için otomatik olarak __üye__ olarak kayıt edildin.`);
         }
         embed.setDescription(description_lines.join("\n"));
-        await member.guild.channels.cache.get(this.data.channels["welcome"]).send({
+        const message = await member.guild.channels.cache.get(this.data.channels["welcome"])?.send({
             embeds: [embed]
         });
+        if (message) {
+            await this.client.models.invites.updateOne({ _id: doc._id }, { $set: { message_id: message.id, channel_id: this.data.channels["welcome"] } });
+        }
     }
 }
 
