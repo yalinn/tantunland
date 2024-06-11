@@ -130,7 +130,7 @@ class GuildMemberAdd extends ClientEvent {
             const otorol = this.client.data.roles["member"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi kurucu").catch(console.log);
-                await client.models.registry.create({
+                await this.client.models.registry.create({
                     userId: member.user.id,
                     staffId: interaction.user.id,
                     fromRoleId: member_removal
