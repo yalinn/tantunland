@@ -15,6 +15,7 @@ const {
     set
 } = require('mongoose');
 const readdir = require("util").promisify(require('fs').readdir);
+const { redis } = require("./redis");
 
 class Bot extends Client {
     constructor(options, name) {
@@ -26,9 +27,7 @@ class Bot extends Client {
         this.config = this.getConfig();
         this.models = this.getModels();
         this.appDir = `${this.baseDir + sep}src${sep}apps${sep + this.name}`;
-        this.redis = createClient({
-            url: this.config.db.redis
-        });
+        this.redis = redis;
         this.loader();
         this.dbConnect();
         this.responders = new Collection();
@@ -53,12 +52,11 @@ class Bot extends Client {
         });
         set("strictQuery", false);
         connect(this.config.db.mongo, this.config.db.options).then(() => {
-            console.log("Veritabanına başarıyla bağlandı!");
+            console.log("MONGO: Connected to the database.");
             //this.initializeData().then(data => this.data = data);
             this.login(process.env["token_" + this.name]);
-            //this.getBots().then((bots) => this.bots = bots);
         }).catch((err) => {
-            console.log(`Veritabanı bağlantısı başarısız.\nHata:\n${err}`);
+            console.log(`MONGO: Database connection failed.\nMONGO ERROR:\n${err}`);
         });
     }
 
@@ -67,9 +65,9 @@ class Bot extends Client {
         this.on("warn", (info) => console.log(info));
         readdir(this.baseDir + "/src/events/").then((files) => {
             files.filter((e) => e.endsWith('.js')).forEach((file) => {
-                console.log("loading event: " + file);
+                console.log("BOT: Loading event: " + file);
                 const event = new (require(this.baseDir + "/src/events/" + file))(this);
-                console.log(`Loading Event:( ${event.name} )`);
+                console.log(`BOT: Loading Event:( ${event.name} )`);
                 this.on(event.name, (...args) => event.exec(...args));
                 delete require.cache[require.resolve(this.baseDir + "/src/events/" + file)];
             });
@@ -81,9 +79,9 @@ class Bot extends Client {
      * @returns {Promise<string[]>}
      */
     async getBots() {
-        let ids = [];
-        await readdir(this.baseDir + "/src/apps/").then(async (apps) => {
-            const tokens = apps.filter(name => !!process.env["token_" + name]).map(name => process.env[name]);
+        return await readdir(this.baseDir + "/src/apps/").then(async (apps) => {
+            const tokens = apps.map(f => "token_" + f).filter(k => !!process.env[k]).map(k => process.env[k]);
+            let ids = [];
             for (let i = 0; i < tokens.length; i++) {
                 const info = await fetch('https://discord.com/api/users/@me', {
                     method: 'GET',
@@ -91,10 +89,11 @@ class Bot extends Client {
                         Authorization: `Bot ${tokens[i]}`,
                     },
                 }).then(r => r.json());
+                console.log(`BOT: ${info.username} [${info.id}] is loaded.`);
                 ids.push(info.id);
             }
+            return ids;
         });
-        return ids;
     }
 
     async setGuild(guildId) {
@@ -128,8 +127,7 @@ class Bot extends Client {
                 }
             });
         });
-        await this.redis.set("ttl_id_data", JSON.stringify(this.data));
-        this.data = await this.redis.get("ttl_id_data").then((raw) => JSON.parse(raw));
+        await this.redis.set("data", this.data);
         return this.data;
     }
 
@@ -213,8 +211,7 @@ class ClientEvent {
     }
 
     async exec(...args) {
-        //this.data = await this.client.redis.get("atl_id_data").then((raw) => JSON.parse(raw));
-        this.data = await this.client.initializeData();
+        this.data = await this.client.redis.get("data");
         if (this.conf.action) {
             this.isAuthed = await this.client.guild.fetchAuditLogs({ type: AuditLogEvent[this.conf.action] }).then(async (audit) => {
                 this.audit = audit.entries.first();
