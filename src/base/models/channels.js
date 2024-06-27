@@ -19,7 +19,7 @@ const channels = model("meta_channels", new Schema({
     strict: false
 }));
 
-const stream = channels.watch([], { fullDocument: "updateLookup", resumeAfter: undefined });
+const stream = channels.watch([]);
 stream.on('change', async (data) => {
-    
+    console.log(data);
 });

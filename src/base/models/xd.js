@@ -12,15 +12,22 @@ const asdSchema = new Schema({
 
 const asd = model("asd", asdSchema);
 
-const xd = model("xd", xdSchema);
+const xd = model("xd", asdSchema);
 const stream = xd.watch([
     /* {
         "$match": {
             "fullDocument.test": { "$ne": null }
         }
     } */
+    {
+        $addFields: {
+            "fullDocument.meta": "$fullDocument.meta",
+            "fullDocument.keyConf": "$fullDocument.keyConf",
+        }
+    }
 ], { fullDocument: "updateLookup", resumeAfter: undefined });
 stream.on('change', async (data) => {
+    console.log(data)
     const cnls = await redis.get(`xd`) || {};
     const keys = Object.keys(cnls);
     switch (data.operationType) {

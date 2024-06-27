@@ -36,7 +36,15 @@ class Redis {
 
     connect(prefix) {
         this.prefix = prefix + ":";
-        return this.client.connect();
+        try {
+            return this.client.connect();
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+    disconnect() {
+        return this.client.quit();
     }
 
 }
