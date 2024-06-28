@@ -1,8 +1,8 @@
 module.exports = {
     apps: [
         {
-            name: "api",
-            script: "./index.ts",
+            name: "registry",
+            script: "./index.js",
             exec_mode: "cluster",
             interpreter: "./node_modules/.bin/ts-node",
             interpreter_args: "--require ts-node/register/transpile-only --require tsconfig-paths/register",

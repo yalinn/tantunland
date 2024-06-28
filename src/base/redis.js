@@ -34,12 +34,12 @@ class Redis {
         return this.client.del(this.prefix + key);
     }
 
-    connect(prefix) {
+    async connect(prefix) {
         this.prefix = prefix + ":";
         try {
-            return this.client.connect();
+            return await this.client.connect()
         } catch (error) {
-            return Promise.reject(error);
+            return error;
         }
     }
 

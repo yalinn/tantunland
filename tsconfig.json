@@ -23,7 +23,8 @@
         "noEmit": true, // Derleme sonucunda dosya oluşturulmasını engeller
         "skipLibCheck": false, // Kütüphanelerdeki tür hatalarını atlar
         "esModuleInterop": true, // CommonJS ve ES modülleri arasındaki uyumluluğu sağlar
-        "forceConsistentCasingInFileNames": true // Dosya isimlerinde büyük/küçük harf tutarlılığını zorunlu kılar
+        "forceConsistentCasingInFileNames": true, // Dosya isimlerinde büyük/küçük harf tutarlılığını zorunlu kılar
+        "allowSyntheticDefaultImports": true,
     },
     "include": [
         "src/**/*.ts",

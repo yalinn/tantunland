@@ -1,12 +1,13 @@
 import Bot from "./Bot";
-import type {
+import {
+    Collection,
+    AuditLogEvent,
     GuildAuditLogsEntry,
     GuildAuditLogsResolvable,
     GuildAuditLogsActionType,
     GuildAuditLogsTargetType
 } from "discord.js";
-import { Collection } from 'discord.js';
-import { AuditLogEvent } from "discord.js";
+
 export default class BotEvent {
     client: Bot;
     conf: {

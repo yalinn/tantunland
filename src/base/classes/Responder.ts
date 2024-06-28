@@ -1,9 +1,5 @@
 import { sep } from 'path';
-const base_dir = __dirname.split(sep).splice(0, __dirname.split(sep).length - 2).join(sep);
-require('dotenv').config({ path: base_dir + sep + '.env' });
-require('moment').locale('tr');
 import { ApplicationCommandOption, Collection } from 'discord.js';
-import type Bot from './Bot';
 
 enum ResponderType {
     "prefix" = 0,
@@ -32,7 +28,7 @@ type ResponderOptions = {
 }
 
 export default class Responder {
-    client: Bot;
+    client: any;
     conf: {
         name: any;
         description: string;
@@ -54,7 +50,7 @@ export default class Responder {
     };
     cooldown: Collection<unknown, unknown>;
     shutdown: any;
-    constructor(client: Bot, {
+    constructor(client: any, {
         name = null,
         description = "",
         type = "prefix",
@@ -88,7 +84,7 @@ export default class Responder {
             devOnly,
             adminOnly,
             rootOnly,
-            path: `${base_dir + sep}src${sep}apps${sep + client.name}${sep}commands${sep + name}.js`
+            path: `${client.appDir}${sep}commands${sep + name}.js`
         };
         this.cooldown = new Collection();
     }
@@ -119,6 +115,7 @@ export default class Responder {
         let cmd = this.client.guild.commands.cache.find(c => c.name === this.conf.name);
         await cmd.edit(that.conf);
     }
+
     async unload() {
         if (this.shutdown) {
             await this.shutdown(this.client);

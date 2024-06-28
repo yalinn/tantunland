@@ -1,7 +1,8 @@
-const { Bot, ClientEvent, Responder } = require('../../../base/classes');
-const { EmbedBuilder, PermissionFlagsBits, Message } = require('discord.js');
+import Bot from '@/base/classes/Bot';
+import BotEvent from '@/base/classes/BotEvent';
+import { EmbedBuilder, PermissionFlagsBits, Message } from 'discord.js';
 
-class PrefixCommandCreate extends ClientEvent {
+class PrefixCommandCreate extends BotEvent {
     /**
      * @param {Bot} client
      */

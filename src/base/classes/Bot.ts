@@ -1,4 +1,4 @@
-import { type Guild, type ClientOptions, Client, Collection } from "discord.js";
+import { Guild, ClientOptions, Client, Collection } from "discord.js";
 import { sep } from 'path';
 const base_dir = __dirname.split(sep).splice(0, __dirname.split(sep).length - 3).join(sep);
 require('dotenv').config({ path: base_dir + sep + '.env' });
@@ -7,7 +7,7 @@ import { connect, set } from 'mongoose';
 const readdir = require("util").promisify(require('fs').readdir);
 import { redis } from "./../redis";
 import BotEvent from "./BotEvent";
-import type Responder from "./Responder";
+import Responder from "./Responder";
 export default class Bot extends Client {
     name: string;
     guild: Guild | null;
@@ -52,36 +52,47 @@ export default class Bot extends Client {
     }
 
     dbConnect() {
-        this.redis.connect().then(() => {
-            console.log("redis bağlantısı kuruldu")
-        });
         set("strictQuery", false);
-        connect(this.config.db.mongo, this.config.db.options).then(() => {
-            console.log("MONGO: Connected to the database.");
+        Promise.all([
+            connect(this.config.db.mongo, this.config.db.options).then(() => {
+                console.log("MONGO: Connection to the mongo server is successful.");
+            }).catch((err) => {
+                console.log(`MONGO: Database connection failed.\nMONGO ERROR:\n${err}`);
+            }),
+            this.redis.connect().then(() => {
+                console.log("REDIS: Connection to the redis server is successful.");
+            }).catch((err) => {
+                console.log(`REDIS: Connection to the redis server failed.\nREDIS ERROR:\n${err}`);
+            })
+        ]).then(() => {
+            console.log("PROCESS: Connected to the database and redis.");
             //this.initializeData().then(data => this.data = data);
             this.login(process.env["token_" + this.name]);
         }).catch((err) => {
-            console.log(`MONGO: Database connection failed.\nMONGO ERROR:\n${err}`);
+            console.log(`PROCESS: Database connection failed.\nERROR:\n${err}`);
         });
     }
 
     loader() {
         this.on("error", (e) => console.log(e));
         this.on("warn", (info) => console.log(info));
-        readdir(this.baseDir + "/src/events/").then((files) => {
+        readdir(this.baseDir + "/src/events/").then((files: string[]) => {
             files.filter((e) => e.endsWith('.js')).forEach((file) => {
-                console.log("BOT: Loading event: " + file);
+                console.log("EVENT: Loading event: " + file);
                 const event = new (require(this.baseDir + "/src/events/" + file))(this) as BotEvent;
                 this.on(event.conf.name, (...args) => event.exec(...args));
                 delete require.cache[require.resolve(this.baseDir + "/src/events/" + file)];
             });
+        }).catch(() => {
+            console.log("EVENT: No events found in" + this.name);
         });
         this.loadEvents();
     }
 
     async getBots() {
-        return await readdir(this.baseDir + "/src/apps/").then(async (apps) => {
-            const tokens = apps.map(f => "token_" + f).filter(k => !!process.env[k]).map(k => process.env[k]);
+        return await readdir(this.baseDir + "/src/apps/").then(async (apps: string[]) => {
+            const alltokens = apps.map(f => "token_" + f).filter(k => !!process.env[k]).map(k => process.env[k]);
+            const tokens = alltokens.filter((t, i) => alltokens.indexOf(t) === i);
             let ids = [];
             for (let i = 0; i < tokens.length; i++) {
                 const info = await fetch('https://discord.com/api/users/@me', {
@@ -90,7 +101,7 @@ export default class Bot extends Client {
                         Authorization: `Bot ${tokens[i]}`,
                     },
                 }).then(r => r.json()) as { id: string, username: string };
-                console.log(`BOT: ${info.username} [${info.id}] is loaded.`);
+                console.log(`RECOGNISE: ${info.username} [${info.id}] is loaded.`);
                 ids.push(info.id);
             }
             return ids;
@@ -104,7 +115,7 @@ export default class Bot extends Client {
             this.guild = guild;
             return guild;
         } catch (error) {
-            console.log(error);
+            console.log({ setGuildError: error });
             return false;
         }
     }
@@ -135,15 +146,14 @@ export default class Bot extends Client {
     loadEvents(path: string = "") {
         readdir(`${this.appDir}/events/${path || ""}`).then((elements) => {
             return elements.map((element) => {
-                let jsFile;
+                let jsFile: BotEvent;
                 if (element.endsWith('.js')) {
                     try {
                         jsFile = new (require(this.appDir + `/events/${path ? path + sep + element : element}`))(this);
-                        jsFile.props.path = `${this.appDir}/events/${path ? path + sep + element : element}`;
                         this.on(jsFile.conf.name, (...args) => jsFile.exec(...args));
                         delete require.cache[require.resolve(this.appDir + `/events/${path ? path + sep + element : element}`)];
                     } catch (error) {
-                        console.log(`❌ Couldn't loaded the event ${element}:\n`, error);
+                        console.log(`EVENT: ❌ Couldn't loaded the event ${element}:\n`, error);
                     } finally {
                         return jsFile;
                     }
@@ -151,16 +161,16 @@ export default class Bot extends Client {
                     this.loadEvents(path ? path + sep + element : element);
                 }
             });
-        }).catch((e: any) => {
-            console.log("event bulunmuyor.")
+        }).catch(() => {
+            console.log("EVENT: No events found in " + this.name);
         });
     }
 
 
     readCommands(path) {
-        readdir(`${this.appDir}/commands/${path || ""}`).then((elements) => {
+        readdir(`${this.appDir}/commands/${path || ""}`).then((elements: string[]) => {
             return elements.map(async (element) => {
-                let jsFile;
+                let jsFile: Responder | null;
                 if (element.endsWith('.js')) {
                     try {
                         jsFile = new (require(this.appDir + `/commands/${path ? path + sep + element : element}`))(this);
@@ -169,7 +179,7 @@ export default class Bot extends Client {
                         return jsFile;
                     } catch (error) {
                         console.log(`❌ Couldn't loaded command ${element}:\n`, error);
-                        jsFile = false;
+                        jsFile = null;
                     } finally {
                         return jsFile;
                     }
@@ -177,8 +187,8 @@ export default class Bot extends Client {
                     this.readCommands(path ? path + sep + element : element);
                 }
             });
-        }).catch((e) => {
-            console.log("komut bulunmuyor.")
+        }).catch(() => {
+            console.log("DEBUG: No commands found in " + this.name)
         });
     }
 }
