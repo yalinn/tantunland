@@ -1,15 +1,33 @@
-const { sep } = require('path');
-const base_dir = __dirname.split(sep).splice(0, __dirname.split(sep).length - 3).join(sep);
-console.log(base_dir);
-require('dotenv').config({ path: base_dir + sep + '.env' });
-require('moment').locale('tr');
-const { Collection, AuditLogEvent } = require('discord.js');
-import Bot from './classes/Bot';
-export class ClientEvent {
-    /**
-     * @param {Bot} client
-     */
-    constructor(client, {
+import Bot from "./Bot";
+import {
+    Collection,
+    AuditLogEvent,
+    GuildAuditLogsEntry,
+    GuildAuditLogsResolvable,
+    GuildAuditLogsActionType,
+    GuildAuditLogsTargetType
+} from "discord.js";
+
+export default class BotEvent {
+    client: Bot;
+    conf: {
+        name: any;
+        punish: string;
+        closePerms: any[];
+        action: keyof typeof AuditLogEvent
+        sequence: boolean;
+    };
+    cooldown: Collection<unknown, unknown>;
+    isAuthed: boolean;
+    data: { roles: {}; channels: {}; };
+    lastId: string | null;
+    audit: GuildAuditLogsEntry<
+        GuildAuditLogsResolvable,
+        GuildAuditLogsActionType,
+        GuildAuditLogsTargetType,
+        GuildAuditLogsResolvable
+    >;
+    constructor(client: Bot, {
         name = null,
         action = null,
         punish = "jail",
@@ -80,101 +98,17 @@ export class ClientEvent {
             }
         };
         try {
-            await this.run(...args);
+            this.run(...args);
         } catch (error) {
             throw error;
         }
     }
-}
 
-
-export class Responder {
-    /**
-     * @param {Bot} client
-     */
-    constructor(client, {
-        name = null,
-        description = "",
-        type = 0,
-        /* 
-        type = 0, prefix
-        type = 1, slash
-        type = 2, user
-        type = 3, message
-        type = 4, Button
-        type = 5, Menu
-        type = 6, Modal
-        */
-        options = [],
-        default_member_permissions = false,
-        customId = null,
-        enabled = true,
-        permissions = [],
-        time = 5000,
-        channels = [],
-        aliases = [],
-        flag = false,
-        devOnly = false,
-        path = null,
-        adminOnly = false,
-        rootOnly = false
-    }) {
-        this.client = client;
-        this.conf = {
-            name,
-            description,
-            type,
-            options,
-            default_member_permissions,
-            customId
-        };
-        this.props = {
-            enabled,
-            permissions,
-            time,
-            channels,
-            aliases,
-            flag,
-            devOnly,
-            adminOnly,
-            rootOnly,
-            path
-        };
-        this.cooldown = new Collection();
+    run(...args) {
+        throw new Error(`The run method has not been implemented in ${this.conf.name}`);
     }
 
-    async load() {
-        if (this.conf.type > 0 && this.conf.type < 4) {
-            let cmd = this.client.guild.commands.cache.find(c => c.type === this.conf.type && c.name === this.conf.name);
-            if (!cmd) {
-                console.log(`${this.props.flag || ""} komutu oluşturuluyor: ${this.conf.name} 👌`);
-                cmd = await this.client.guild.commands.create(this.conf, this.client.guild.id);
-                this.client.responders.set(cmd.id, this);
-            } else {
-                this.client.responders.set(cmd.id, this);
-            }
-            return this;
-        } else if (this.conf.type >= 4 && this.conf.type < 6) {
-            this.client.responders.set(`component:${this.conf.customId}`, this);
-        } else if (this.conf.type == 6) {
-            this.client.responders.set(`modal:${this.conf.name}`, this);
-        } else {
-            this.client.responders.set(`prefix:${this.conf.name}`, this);
-        }
-        return this;
+    fix(...args) {
+        throw new Error(`The fix method has not been implemented in ${this.conf.name}`);
     }
-
-    async reload() {
-        let that = this.client.responders.find(r => r.conf.name === this.conf.name);
-        let cmd = this.client.guild.commands.cache.find(c => c.name === this.conf.name);
-        await cmd.edit(that.conf);
-    }
-    async unload() {
-        if (this.shutdown) {
-            await this.shutdown(this.client);
-        }
-        delete require.cache[require.resolve(this.props.path)];
-        return this;
-    }
-
 }

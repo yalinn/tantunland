@@ -6,6 +6,9 @@ class Ready {
      */
     constructor(client) {
         this.name = "ready";
+        this.conf = {
+            name: "ready",
+        };
         this.client = client;
     }
 
