@@ -1,15 +1,8 @@
-<<<<<<< Updated upstream
-const { Bot, ClientEvent, Responder } = require('../../../base/classes');
-const { EmbedBuilder, PermissionFlagsBits, Message } = require('discord.js');
+import Bot from '@/base/classes/Bot';
+import BotEvent from '@/base/classes/BotEvent';
+import { EmbedBuilder, PermissionFlagsBits, Message } from 'discord.js';
 
-class PrefixCommandCreate extends ClientEvent {
-=======
-import Bot from '@/classes/Bot';
-import BotEvent from '@/classes/BotEvent';
-import { Message } from 'discord.js';
-
-export default class PrefixCommandCreate extends BotEvent {
->>>>>>> Stashed changes
+class PrefixCommandCreate extends BotEvent {
     /**
      * @param {Bot} client
      */

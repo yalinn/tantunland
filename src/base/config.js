@@ -4,6 +4,7 @@ module.exports = {
     developers: [   // tekrardan root'a eklemeye gerek yok
         "942697809080111145", 
     ],
+    redis_prefix: "ttl",
     db: {
         mongo: process.env.mongo_url,
         redis: process.env.redis_url,
