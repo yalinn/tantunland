@@ -1,5 +1,6 @@
 import { sep } from 'path';
 import { ApplicationCommandOption, Collection } from 'discord.js';
+import type Bot from './Bot';
 
 enum ResponderType {
     "prefix" = 0,
@@ -28,7 +29,7 @@ type ResponderOptions = {
 }
 
 export default class Responder {
-    client: any;
+    client: Bot;
     conf: {
         name: any;
         description: string;
@@ -50,7 +51,7 @@ export default class Responder {
     };
     cooldown: Collection<unknown, unknown>;
     shutdown: any;
-    constructor(client: any, {
+    constructor(client: Bot, {
         name = null,
         description = "",
         type = "prefix",
