@@ -1,6 +1,7 @@
-const { Invite } = require('discord.js');
-const { ClientEvent, Bot } = require("../../../base/classes");
-class InviteDelete extends ClientEvent {
+import { Invite } from 'discord.js';
+import Bot from '@/classes/Bot.ts';
+import BotEvent from '@/classes/BotEvent.ts';
+export default class InviteDelete extends BotEvent {
 
     /**
      * @param {Bot} client
@@ -31,4 +32,3 @@ class InviteDelete extends ClientEvent {
            });*/
     }
 }
-module.exports = InviteDelete;

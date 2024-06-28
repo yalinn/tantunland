@@ -1,6 +1,7 @@
-const { ClientEvent, Bot } = require("../../../base/classes");
+import Bot from '@/classes/Bot.ts';
+import BotEvent from '@/classes/BotEvent.ts';
 
-class Ready extends ClientEvent {
+export default class Ready extends BotEvent {
 
 	/**
 	 * @param {Bot} client
@@ -119,5 +120,3 @@ class Ready extends ClientEvent {
 
 	}
 }
-
-module.exports = Ready;

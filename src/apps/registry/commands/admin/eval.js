@@ -1,8 +1,10 @@
-const Discord = require('discord.js');
-const { stripIndents } = require("common-tags");
-const chp = require("child_process");
-const { Responder, Bot } = require("../../../../base/classes");
-class Eval extends Responder {
+import { ApplicationCommandOptionType } from 'discord.js';
+import { stripIndents } from "common-tags";
+import chp from "child_process";
+import Responder from '@/classes/Responder';
+import Bot from '@/classes/Bot';
+
+export default class Eval extends Responder {
 
     constructor(client) {
         super(client, {
@@ -16,7 +18,7 @@ class Eval extends Responder {
                 {
                     name: "code",
                     description: "Code to evaluate",
-                    type: Discord.ApplicationCommandOptionType.String,
+                    type: ApplicationCommandOptionType.String,
                     required: true
                 }
             ]
@@ -49,10 +51,5 @@ class Eval extends Responder {
                 ephemeral: true
             });
         }
-
-
     }
-
 }
-
-module.exports = Eval;

@@ -10,7 +10,7 @@ module.exports = {
         options: {
             authSource: "admin",
             dbName: "Tantunland",
-            replicaSet: "rs1",
+            //replicaSet: "rs1",
         }
     },
     roots: [        // her işlem için izinli id'ler

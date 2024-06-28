@@ -1,7 +1,8 @@
-const { RoleSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, EmbedBuilder, Message, ChannelType } = require('discord.js');
-const { Bot, Responder } = require('../../../../base/classes');
-const { stripIndent } = require('common-tags');
-class ClearMessages extends Responder {
+import { Message, ChannelType } from 'discord.js';
+import Bot from '@/classes/Bot.ts';
+import Responder from '@/classes/Responder.ts';
+import { stripIndent } from 'common-tags';
+export default class ClearMessages extends Responder {
     /**
      * @param {Bot} client
      */
@@ -34,5 +35,3 @@ class ClearMessages extends Responder {
         }
     }
 }
-
-module.exports = ClearMessages;

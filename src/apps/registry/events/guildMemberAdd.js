@@ -1,8 +1,9 @@
-const { GuildMember, Embed, EmbedBuilder } = require('discord.js');
-const { Bot, ClientEvent } = require('../../../base/classes');
-const { stripIndents } = require('common-tags');
+import { GuildMember, EmbedBuilder } from 'discord.js';
+import Bot from '@/classes/Bot.ts';
+import BotEvent from '@/classes/BotEvent.ts';
+import { stripIndents } from 'common-tags';
 
-class GuildMemberAdd extends ClientEvent {
+export default class GuildMemberAdd extends BotEvent {
 
     /**
      * @param {Bot} client
@@ -148,5 +149,3 @@ class GuildMemberAdd extends ClientEvent {
         }
     }
 }
-
-module.exports = GuildMemberAdd;

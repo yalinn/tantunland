@@ -1,5 +1,10 @@
+<<<<<<< Updated upstream
 const { Bot } = require('../../base/classes');
 const { GatewayIntentBits } = require('discord.js');
+=======
+import Bot from '@/classes/Bot';
+import { GatewayIntentBits } from 'discord.js';
+>>>>>>> Stashed changes
 const client = new Bot({
     intents: [
         GatewayIntentBits.Guilds,

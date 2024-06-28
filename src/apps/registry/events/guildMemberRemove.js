@@ -1,6 +1,7 @@
-const { GuildMember, EmbedBuilder } = require('discord.js');
-const { ClientEvent, Bot } = require("../../../base/classes");
-class GuildMemberRemove extends ClientEvent {
+import { GuildMember, EmbedBuilder } from 'discord.js';
+import Bot from '@/classes/Bot.ts';
+import BotEvent from '@/classes/BotEvent.ts';
+export default class GuildMemberRemove extends BotEvent {
 
     /**
      * @param {Bot} client
@@ -43,4 +44,3 @@ class GuildMemberRemove extends ClientEvent {
         await message.edit({ embeds: [embed] });
     }
 }
-module.exports = GuildMemberRemove;

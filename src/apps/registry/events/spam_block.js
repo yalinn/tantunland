@@ -1,6 +1,7 @@
-const { Message } = require('discord.js');
-const { ClientEvent, Bot } = require("../../../base/classes");
-class SpamBlocker extends ClientEvent {
+import { Message } from 'discord.js';
+import Bot from '@/classes/Bot.ts';
+import BotEvent from '@/classes/BotEvent.ts';
+export default class SpamBlocker extends BotEvent {
 
     /**
      * @param {Bot} client
@@ -36,4 +37,3 @@ class SpamBlocker extends ClientEvent {
         }
     }
 }
-module.exports = SpamBlocker;

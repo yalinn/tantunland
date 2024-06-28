@@ -1,7 +1,8 @@
-const { Message, CommandInteraction, UserContextMenuCommandInteraction, EmbedBuilder } = require('discord.js');
-const { Bot, Responder } = require('../../../../base/classes');
-const { stripIndent } = require('common-tags');
-class ClickDel extends Responder {
+import { UserContextMenuCommandInteraction, EmbedBuilder } from 'discord.js';
+import Responder from '@/classes/Responder';
+import Bot from '@/classes/Bot';
+import { stripIndent } from 'common-tags';
+export default class ClickDel extends Responder {
     /**
      * @param {Bot} client
      */
@@ -64,5 +65,3 @@ class ClickDel extends Responder {
 
     }
 }
-
-module.exports = ClickDel;

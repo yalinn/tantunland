@@ -1,6 +1,7 @@
-const { Message, time, PermissionsBitField } = require('discord.js');
-const { ClientEvent, Bot } = require("../../../base/classes");
-class LinkBlocker extends ClientEvent {
+import { Message, time, PermissionsBitField } from 'discord.js';
+import Bot from '@/classes/Bot.ts';
+import BotEvent from '@/classes/BotEvent.ts';
+export default class LinkBlocker extends BotEvent {
 
     /**
      * @param {Bot} client
@@ -42,4 +43,3 @@ class LinkBlocker extends ClientEvent {
         }
     }
 }
-module.exports = LinkBlocker;

@@ -1,9 +1,9 @@
-const { GuildMember } = require("discord.js");
-const { ClientEvent, Bot } = require("../../../base/classes");
-const pm2 = require("pm2");
-const { modPerms } = require("../../../base/constants");
-
-class GuildMemberUpdate extends ClientEvent {
+import { GuildMember } from "discord.js";
+import { list as _list } from "pm2";
+import { modPerms } from "../../../base/constants";
+import Bot from '@/classes/Bot.ts';
+import BotEvent from '@/classes/BotEvent.ts';
+export default class GuildMemberUpdate extends BotEvent {
 
     /**
      * @param {Bot} client
@@ -27,7 +27,7 @@ class GuildMemberUpdate extends ClientEvent {
         const client = this.client;
         if (member.guild.id !== client.config.guildId) return;
         let ohal = false;
-        pm2.list((err, list) => {
+        _list((err, list) => {
             if (err) return;
             ohal = list.map(item => item.name).filter(item => item.startsWith("CD")).length > 0;
         });
@@ -70,4 +70,3 @@ class GuildMemberUpdate extends ClientEvent {
         await member.guild.members.fetch();
     }
 }
-module.exports = GuildMemberUpdate;

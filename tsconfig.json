@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "target": "es6", // Hedef JavaScript sürümü
+        "module": "commonjs", // Modül çözümleme stratejisi
+        "checkJs": false,
+        "noImplicitAny": false,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/base/*"
+            ]
+        },
+        "lib": [
+            "es6"
+        ],
+        "allowJs": true,
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "resolveJsonModule": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "noEmit": true, // Derleme sonucunda dosya oluşturulmasını engeller
+        "skipLibCheck": false, // Kütüphanelerdeki tür hatalarını atlar
+        "esModuleInterop": true, // CommonJS ve ES modülleri arasındaki uyumluluğu sağlar
+        "forceConsistentCasingInFileNames": true, // Dosya isimlerinde büyük/küçük harf tutarlılığını zorunlu kılar
+        "allowSyntheticDefaultImports": true,
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.js"
+    ],
+    "exclude": [
+        "**/*.spec.ts",
+    ]
+}
