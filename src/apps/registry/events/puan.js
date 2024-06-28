@@ -1,8 +1,8 @@
-import Bot from '@/base/classes/Bot';
-import BotEvent from '@/base/classes/BotEvent';
+import Bot from '@/classes/Bot';
+import BotEvent from '@/classes/BotEvent';
 import { EmbedBuilder, PermissionFlagsBits, Message } from 'discord.js';
 
-class PrefixCommandCreate extends BotEvent {
+export default class PrefixCommandCreate extends BotEvent {
     /**
      * @param {Bot} client
      */

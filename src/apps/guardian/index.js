@@ -1,4 +1,4 @@
-import Bot from '@/base/classes/Bot';
+import Bot from '@/classes/Bot';
 import { GatewayIntentBits } from 'discord.js';
 const client = new Bot({
     intents: [

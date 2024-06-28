@@ -77,7 +77,7 @@ export default class Bot extends Client {
         set("strictQuery", false);
         Promise.all([
             connect(this.config.db.mongo, this.config.db.options),
-            this.redis.client.connect()
+            this.redis.connect()
         ]).then(() => {
             console.log("💽 Connected to the databases.");
             //this.initializeData().then(data => this.data = data);

@@ -40,7 +40,7 @@ class Redis {
         return this.client.del(this.prefix + key);
     }
 
-    connect(prefix) {
+    connect(prefix = "none") {
         this.prefix = prefix + ":";
         return this.client.connect()
     }
