@@ -16,8 +16,9 @@ class Ready {
      * @param {Bot} client
      */
     async exec(client) {
+        console.log(`${client.user.tag} is ready!`);
         client.guild = await client.setGuild(client.config.guildId);
-        if (!client.guild) return console.log("Belirtilen sunucu bulunamadı.");
+        if (!client.guild) return console.log("Specified guild not found.");
         client.bots = await client.getBots();
         console.log(`${client.user.tag}, ${client.guild.name} için ${client.bots.length} aktif edildi.`);
         client.readCommands();

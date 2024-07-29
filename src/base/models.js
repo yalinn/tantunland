@@ -1,10 +1,37 @@
 const config = require("./config.js");
 const { model, Schema } = require("mongoose");
+const redis = require('./redis').redis;
 
+const temp = model("temp_channel", new Schema({
+    guildId: { type: String, default: config.guildId },
+    channelId: String,
+    userId: String,
+}, {
+    timestamps: {
+        createdAt: "created_at",
+        updatedAt: "updated_at"
+    },
+    versionKey: false
+}));
 
+const temp_stream = temp.watch([], { fullDocument: "updateLookup", resumeAfter: undefined });
+temp_stream.on("change", async (data) => {
+    console.log(data);
+    let cnls = await redis.get(`temp_channel`) || [];
+    switch (data.operationType) {
+        case "insert":
+            cnls = [...cnls, data.fullDocument];
+            await redis.set(`temp_channel`, cnls);
+            break;
+        case "delete":
+            cnls = cnls.filter(c => c._id !== data.documentKey["_id"].toString());
+            await redis.set(`temp_channel`, cnls);
+            break;
+    }
+});
 
 module.exports = {
-
+    temp,
     member: model("meta_members", new Schema({
         _id: String,
         guildId: { type: String, default: config.guildId },

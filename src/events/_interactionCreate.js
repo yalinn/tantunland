@@ -21,8 +21,8 @@ class IntCreateEvent extends ClientEvent {
         let cmd;
         if (interaction.type === InteractionType.ApplicationCommand) {
             cmd = this.client.responders.get(interaction.commandId);
-        } else {
-            cmd = this.client.responders.get(interaction.customId);
+        } else if (interaction.type === InteractionType.MessageComponent) {
+            cmd = this.client.responders.get(interaction.customId.split(":")[0]);
         }
         if (!cmd) return;
         if (cmd.props.permissions.length > 0 && !cmd.props.permissions.some(p => interaction.member.roles.cache.has(this.data.roles[p])) && !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {

@@ -1,6 +1,6 @@
 module.exports = {
     prefix: [".", "!"],
-    guildId: "1146235982149062846",
+    guildId: process.env.guild_id || "1146235982149062846",
     developers: [
         "942697809080111145",
     ],

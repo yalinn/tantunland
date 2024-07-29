@@ -27,7 +27,6 @@ const stream = xd.watch([
     }
 ], { fullDocument: "updateLookup", resumeAfter: undefined });
 stream.on('change', async (data) => {
-    console.log(data)
     const cnls = await redis.get(`xd`) || {};
     const keys = Object.keys(cnls);
     switch (data.operationType) {
