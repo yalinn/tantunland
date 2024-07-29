@@ -8,6 +8,8 @@ const readdir = require("util").promisify(require('fs').readdir);
 import { redis } from "./../redis";
 import BotEvent from "./BotEvent";
 import Responder from "./Responder";
+import config from "../config";
+import models from "./../models";
 
 type config_key =
     | "welcome"
@@ -35,8 +37,8 @@ export default class Bot extends Client {
     guild: Guild | null;
     baseDir: string;
     base: string;
-    config: any;
-    models: any;
+    config: typeof config;
+    models: typeof models;
     appDir: string;
     redis: typeof redis;
     responders: Collection<string, Responder>;
@@ -49,8 +51,8 @@ export default class Bot extends Client {
         this.name = name;
         this.baseDir = base_dir;
         this.base = __dirname.toString();
-        this.config = this.getConfig();
-        this.models = this.getModels();
+        this.config = config;
+        this.models = models;
         this.appDir = `${this.baseDir + sep}src${sep}apps${sep + this.name}`;
         this.redis = redis;
         this.loader();
@@ -65,10 +67,6 @@ export default class Bot extends Client {
         this.guild = null;
     }
 
-    getConfig() {
-        return require("./../config");
-    }
-
     getModels() {
         return require("./../models");
     }
@@ -77,7 +75,7 @@ export default class Bot extends Client {
         set("strictQuery", false);
         Promise.all([
             connect(this.config.db.mongo, this.config.db.options),
-            this.redis.connect()
+            this.redis.connect(this.config.redis_prefix)
         ]).then(() => {
             console.log("💽 Connected to the databases.");
             //this.initializeData().then(data => this.data = data);
@@ -104,6 +102,8 @@ export default class Bot extends Client {
     }
 
     async getBots() {
+        const id_list = await this.redis.get("bots");
+        if (id_list) return this.bots;
         return await readdir(this.baseDir + "/src/apps/").then(async (apps: string[]) => {
             const alltokens = apps.map(f => "token_" + f).filter(k => !!process.env[k]).map(k => process.env[k]);
             const tokens = alltokens.filter((t, i) => alltokens.indexOf(t) === i);
@@ -118,11 +118,12 @@ export default class Bot extends Client {
                 console.log(`🤝 ${info.username} [${info.id}] is recorded.`);
                 ids.push(info.id);
             }
+            await this.redis.set("bots", JSON.stringify(ids));
             return ids;
         });
     }
 
-    async setGuild(guildId) {
+    async setGuild(guildId: string) {
         try {
             const guild = await this.guilds.fetch(guildId);
             this.guilds.cache.filter((g) => g.id !== this.config.guildId).forEach(g => g.leave());
@@ -135,7 +136,7 @@ export default class Bot extends Client {
     }
 
     async initializeData() {
-        await this.models.roles.find({ keyConf: { $ne: null } }).then((docs) => {       // "$ne" = "(N)ot (E)quals to"
+        await this.models.roles.find({ keyConf: { $ne: null } }).then((docs) => {
             docs.forEach((doc) => {
                 let values = this.data["roles"][doc.keyConf] || [];
                 const roleId = doc.meta.pop().id;
@@ -143,7 +144,7 @@ export default class Bot extends Client {
                 if (this.guild) this.data["roles"][doc.keyConf] = this.data["roles"][doc.keyConf].filter((id) => this.guild.roles.cache.has(id));
             });
         });
-        await this.models.channels.find({ keyConf: { $ne: null } }).then((docs) => {    // "$ne" = "(N)ot (E)quals to"
+        await this.models.channels.find({ keyConf: { $ne: null } }).then((docs) => {
             docs.forEach((doc) => {
                 const channel_id = doc.meta.pop().id;
                 if (this.guild && !this.guild.channels.cache.has(channel_id)) {
@@ -184,7 +185,7 @@ export default class Bot extends Client {
     }
 
 
-    readCommands(path) {
+    readCommands(path: string = "") {
         readdir(`${this.appDir}/commands/${path || ""}`).then((elements: string[]) => {
             return elements.map(async (element) => {
                 let jsFile: Responder | null;

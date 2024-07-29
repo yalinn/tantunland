@@ -1,20 +1,20 @@
 module.exports = {
     prefix: [".", "!"],
     guildId: "1146235982149062846",
-    developers: [   // tekrardan root'a eklemeye gerek yok
-        "942697809080111145", 
+    developers: [
+        "942697809080111145",
     ],
-    redis_prefix: "ttl",
+    redis_prefix: process.env.redis_prefix || "ttl",
     db: {
         mongo: process.env.mongo_url,
         redis: process.env.redis_url,
         options: {
-            authSource: "admin",
-            dbName: "Tantunland",
-            //replicaSet: "rs1",
+            authSource: process.env.mongo_auth_db || "admin",
+            dbName: process.env.mongo_db || "discord",
+            replicaSet: process.env.mongo_replica_set || "rs1",
         }
     },
-    roots: [        // her işlem için izinli id'ler
+    roots: [
 
     ]
 }

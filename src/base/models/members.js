@@ -1,5 +1,5 @@
-const { model, Schema } = require("mongoose");
-const { redis } = require("../redis");
+import { model, Schema } from "mongoose";
+import { redis } from "../redis";
 
 const members = model("members", new Schema({
     _id: String,

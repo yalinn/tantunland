@@ -51,22 +51,22 @@ export default class BotEvent {
         this.lastId = null;
     }
 
-    async exec(...args) {
+    async exec(...args: any[]) {
         this.data = await this.client.redis.get("data");
         if (this.conf.action) {
             this.isAuthed = await this.client.guild.fetchAuditLogs({ type: AuditLogEvent[this.conf.action] }).then(async (audit) => {
                 this.audit = audit.entries.first();
                 if (this.client.config.developers.concat(this.client.config.roots).includes(this.audit.executorId)) return true;
                 if (this.client.bots.includes(this.audit.executorId)) return true;
-                const docs = await this.client.redis.get(`atl_authorized:${this.audit.executorId}`).then((raw) => JSON.parse(raw));
+                const docs = await this.client.redis.get(`authorized:${this.audit.executorId}`).then((raw) => JSON.parse(raw));
                 if (!docs || docs.length == 0) return false;
                 const accure = docs.filter((prm) => prm.until && prm.until.getTime() - new Date().getTime() > 0);
-                await this.client.redis.set(`atl_authorized:${this.audit.executorId}`, JSON.stringify(accure));
+                await this.client.redis.set(`authorized:${this.audit.executorId}`, JSON.stringify(accure));
                 if (accure.length == 0) return false;
                 const prim = accure.findIndex((prm) => prm.action === this.conf.action);
                 if (!accure[prim]) return false;
                 const accured = accure.slice(0, prim).concat(accure.slice(prim + 1));
-                await this.client.redis.set(`atl_authorized:${this.audit.executorId}`, JSON.stringify(accured));
+                await this.client.redis.set(`authorized:${this.audit.executorId}`, JSON.stringify(accured));
                 return true;
             });
             if (this.lastId === this.audit.id) return;
@@ -104,11 +104,11 @@ export default class BotEvent {
         }
     }
 
-    run(...args) {
+    run(...args: any[]) {
         throw new Error(`The run method has not been implemented in ${this.conf.name}`);
     }
 
-    fix(...args) {
+    fix(...args: any[]) {
         throw new Error(`The fix method has not been implemented in ${this.conf.name}`);
     }
 }

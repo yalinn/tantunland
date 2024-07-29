@@ -31,7 +31,7 @@ class IntCreateEvent extends ClientEvent {
                 ephemeral: true
             });
         }
-        //burası önemli (ownerOnly açma) babanın amını yalarım
+        //burası önemli (ownerOnly açma)
         if (!cmd.props.enabled && interaction.user.id !== this.client.owner.id) {
             return await interaction.reply({
                 content: `Bu komut şuan için **devredışı**`,
