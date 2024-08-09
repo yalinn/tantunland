@@ -27,7 +27,6 @@ export default class GuildMemberRemove extends BotEvent {
         await this.client.models.invites.updateMany({ invitedId: member.id, guildId: member.guild.id, left: false }, { $set: { left: true } });
         if (!memberData) {
             console.log(`${member.user.tag} sunucudan ayrıldı. Üyelik bulunamadı.`);
-            return;
         }
         const colors = {
             member: "#ff0000",
