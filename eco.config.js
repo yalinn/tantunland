@@ -1,6 +1,6 @@
 module.exports = {
     apps: [
-        /* {
+        {
             name: "registry",
             script: "./index.js",
             exec_mode: "cluster",
@@ -11,7 +11,7 @@ module.exports = {
             watch: true,
             cwd: "./src/apps/registry",
         },
-        {
+        /* {
             name: "guardian",
             script: "./index.js",
             exec_mode: "cluster",
@@ -22,7 +22,7 @@ module.exports = {
             watch: true,
             cwd: "./src/apps/guardian",
         }, */
-        {
+        /* {
             name: "preserver",
             script: "./index.js",
             exec_mode: "cluster",
@@ -32,6 +32,6 @@ module.exports = {
             max_restarts: 10,
             watch: true,
             cwd: "./src/apps/preserver",
-        }
+        } */
     ]
 }
