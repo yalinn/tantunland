@@ -100,8 +100,10 @@ export default class Responder {
                 this.client.responders.set(cmd.id, this);
             }
             return this;
-        } else if (this.conf.type >= 4 && this.conf.type < 6) {
+        } else if (this.conf.type == 4) {
             this.client.responders.set(`component:${this.conf.customId}`, this);
+        } else if (this.conf.type == 5) {
+            this.client.responders.set(`menu:${this.conf.name}`, this);
         } else if (this.conf.type == 6) {
             this.client.responders.set(`modal:${this.conf.name}`, this);
         } else {

@@ -1,0 +1,21 @@
+export type config_key =
+    | "welcome"
+    | "register"
+    | "admin"
+    | "mod"
+    | "mute"
+    | "ban"
+    | "jail"
+    | "unregister"
+    | "staff"
+    | "booster"
+    | "partner"
+    | "sponsor"
+    | "developer"
+    | "owner"
+    | "bot"
+
+export type channel_id =
+    | "welcome"
+    | "chat"
+    | "command"

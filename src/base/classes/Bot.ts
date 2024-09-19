@@ -10,28 +10,7 @@ import BotEvent from "./BotEvent";
 import Responder from "./Responder";
 import config from "../config";
 import models from "./../models";
-
-type config_key =
-    | "welcome"
-    | "register"
-    | "admin"
-    | "mod"
-    | "mute"
-    | "ban"
-    | "jail"
-    | "unregister"
-    | "staff"
-    | "booster"
-    | "partner"
-    | "sponsor"
-    | "developer"
-    | "owner"
-    | "bot"
-
-type channel_id =
-    | "welcome"
-    | "chat"
-    | "command"
+import { constants } from "./../types";
 export default class Bot extends Client {
     name: string;
     guild: Guild | null;
@@ -43,7 +22,7 @@ export default class Bot extends Client {
     redis: typeof redis;
     responders: Collection<string, Responder>;
     invites: Collection<unknown, unknown>;
-    data: { roles: Record<config_key, string[]>; channels: Record<channel_id, string>; };
+    data: { roles: Record<constants.config_key, string[]>; channels: Record<constants.channel_id, string>; };
     bots: string[];
     constructor(options: ClientOptions, name: string) {
         name = name.split(sep).pop() as string;
@@ -60,8 +39,8 @@ export default class Bot extends Client {
         this.responders = new Collection();
         this.invites = new Collection();
         this.data = {
-            roles: {} as Record<config_key, string[]>,
-            channels: {} as Record<channel_id, string>
+            roles: {} as Record<constants.config_key, string[]>,
+            channels: {} as Record<constants.channel_id, string>
         };
         this.bots = [];
         this.guild = null;
@@ -193,8 +172,8 @@ export default class Bot extends Client {
                     import(this.appDir + `/commands/${path ? path + sep + element : element}`).then((file) => {
                         jsFile = new file.default(this);
                         jsFile.props.path = `${this.appDir}/commands/${path ? path + sep + element : element}`;
-                        jsFile.load().then(() => {
-                            console.log(`✅ Loaded command ${jsFile.conf.name}`);
+                        jsFile.load().then((cmd) => {
+                            console.log(`✅ Loaded command ${cmd.conf.name}`);
                         }).catch((error) => {
                             console.log(`❌ Error occured in command ${element}:\n`, error);
                         });
