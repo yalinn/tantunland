@@ -20,7 +20,7 @@ export default class GuildMemberAdd extends BotEvent {
      */
     async run(member) {
         if (member.guild.id !== this.client.config.guildId) return;
-        const gInvites = await member.guild.invites.fetch({ cache: false })
+        const gInvites = await member.guild.invites.fetch({ cache: false });
         const invite = this.client.invites.find((inv) => inv.uses < gInvites.get(inv.code)?.uses || !gInvites.has(inv.code));
         await member.guild.invites.fetch().then(async (invites) => {
             this.client.invites = invites;
@@ -61,7 +61,7 @@ export default class GuildMemberAdd extends BotEvent {
             in_voice: staff.filter(m => m.voice && m.voice.channel).size,
         }
         if (!inviterMember) {
-            const otorol = this.client.data.roles["autorol"];
+            const otorol = this.client.data.roles["autorole"];
             if (otorol && otorol.length > 0) {
                 await member.roles.add(otorol, "davetçisi bulunamadı").catch(console.log);
             }

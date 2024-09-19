@@ -32,6 +32,23 @@ temp_stream.on("change", async (data) => {
 
 module.exports = {
     temp,
+    rolemenu: model("rolemenu", new Schema({
+        guildId: { type: String, default: config.guildId },
+        rowID: { type: String },
+        channelId: String,
+        messageId: String,
+        customId: String,
+        options: [{
+            option: String,
+            roleKey: String
+        }]
+    }, {
+        timestamps: {
+            createdAt: "created_at",
+            updatedAt: "updated_at"
+        },
+        versionKey: false
+    })),
     member: model("meta_members", new Schema({
         _id: String,
         guildId: { type: String, default: config.guildId },

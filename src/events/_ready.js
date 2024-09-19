@@ -1,4 +1,4 @@
-const { Bot } = require("../base/classes");
+import Bot from "../base/classes/Bot";
 
 class Ready {
     /**
