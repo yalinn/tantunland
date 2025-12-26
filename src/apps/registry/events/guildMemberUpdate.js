@@ -37,10 +37,20 @@ export default class GuildMemberUpdate extends BotEvent {
             if (!model) {
                 await client.models.member.create({
                     _id: member.user.id,
-                    roles
+                    roles: (await Promise.all(roles.map(r => this.client.models.roles.findOne({ meta: { $elemMatch: { _id: r } } }).then(roleData => {
+                        if (roleData) return roleData._id;
+                        return undefined;
+                    }))))?.filter(r => r !== undefined)
                 });
             } else {
-                await client.models.member.updateOne({ _id: member.user.id }, { $set: { roles } });
+                await client.models.member.updateOne({ _id: member.user.id }, {
+                    $set: {
+                        roles: (await Promise.all(roles.map(r => this.client.models.roles.findOne({ meta: { $elemMatch: { _id: r } } }).then(roleData => {
+                            if (roleData) return roleData._id;
+                            return undefined;
+                        }))))?.filter(r => r !== undefined)
+                    }
+                });
             }
             //console.log(`${this.audit.executor.username} => [${this.audit.changes[0].key}] ${this.audit.target.username} : ${this.audit.changes[0].new[0].name}`);
         }

@@ -14,7 +14,7 @@ export default class BotEvent {
         name: any;
         punish: string;
         closePerms: any[];
-        action: keyof typeof AuditLogEvent
+        action: keyof typeof AuditLogEvent | null;
         sequence: boolean;
     };
     cooldown: Collection<unknown, unknown>;

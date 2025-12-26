@@ -155,10 +155,40 @@ module.exports = {
             position: Number,
             bitfield: String,
             created: Date,
-            emoji: String
+            emoji: String,
+            timestamp: Date
         }],
         deleted: Boolean,
-        emojis: [String]
+        emojis: [String],
+        givers: [String] // role or user id
+    }, {
+        timestamps: {
+            createdAt: "createdAt",
+            updatedAt: "updatedAt"
+        }
+    })),
+    channel_overwrites: model("meta_channel_overwrites", new Schema({
+        channelId: String,
+        roleId: String,
+        allow: [String],
+        deny: [String],
+        deleted: Boolean
+    }, {
+        timestamps: {
+            createdAt: "createdAt",
+            updatedAt: "updatedAt"
+        }
+    })),
+    //role log
+    backup_member_roles: model("backup_member_roles", new Schema({
+        _id: String, // member ID
+        info: Array, // [{ [add/remove]: roleID }]
+        from: String // staff ID
+    }, {
+        timestamps: {
+            createdAt: "createdAt",
+            updatedAt: "updatedAt"
+        },
     })),
 
     channels: model("meta_channels", new Schema({

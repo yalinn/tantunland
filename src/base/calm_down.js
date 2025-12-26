@@ -15,7 +15,7 @@ const pm2 = require('pm2');
 client.on('ready', async (c) => {
     client.user.setPresence({ status: client.config.cdStatus });
     const guild = client.guilds.cache.get(client.config.guild);
-    const sayi = Math.floor(guild.members.cache.size / tkc);
+    const sayi = Math.round(guild.members.cache.size / tkc);
     const array = guild.members.cache.map(m => m).slice((sayi * process.argv.pop()), (sayi * (process.argv.pop() + 1)));
     let i = 0;
     setInterval(async () => {
