@@ -1,16 +1,5 @@
 module.exports = {
     apps: [
-        /* {
-            name: "registry",
-            cwd: "/root/github/tantunland",
-            script: "src/apps/registry/index.js",
-            exec_mode: "fork",
-            interpreter: "/root/github/tantunland/node_modules/.bin/ts-node",
-            interpreter_args: "--transpile-only --require tsconfig-paths/register",
-            watch: false,
-            merge_logs: true,
-            max_restarts: 10,
-        }, */
         {
             name: "registry",
             script: "./index.js",
