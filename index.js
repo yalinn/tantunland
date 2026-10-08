@@ -1,4 +1,4 @@
-const { Bot } = require('./src/base/bot');
+/* const { Bot } = require('./src/base/bot');
 const { xd, asd } = require("./src/base/models/xd");
 const client = new Bot();
 const { redis } = require('./src/base/redis');
@@ -14,4 +14,10 @@ client.on("ready", async () => {
   console.log("Ready");
 });
 
-client.start(); 
+client.start();  */
+
+const func = (asd, bsd, ...args) => {
+    console.log(args.length);
+}
+
+func(1, 2, 3);

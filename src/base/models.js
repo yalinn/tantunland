@@ -94,6 +94,19 @@ module.exports = {
         },
         versionKey: false
     })),
+    confession: model("confession", new Schema({
+        guildId: { type: String, default: config.guildId },
+        userId: String,
+        message: String,
+        channelId: String,
+        status: Boolean
+    }, {
+        timestamps: {
+            createdAt: "created_at",
+            updatedAt: "updated_at"
+        },
+        versionKey: false
+    })),
 
     penalties: model("data_penalty", new Schema({
         guildId: { type: String, default: config.guildId },
@@ -102,6 +115,7 @@ module.exports = {
         reason: String,
         typeOf: String,
         extras: Array,
+        duration: Number,
         until: Date,
         expired: Boolean
     }, {
@@ -219,7 +233,12 @@ module.exports = {
         guildId: String,
         channelId: String,
         userId: String,
+        ex_message: String,
         message: String,
-        date: Date
+        ex_created: Date,
+    }, {
+        timestamps: {
+            createdAt: "createdAt"
+        }
     })),
 }

@@ -73,6 +73,9 @@ class IntCreateEvent extends ClientEvent {
             content: `Komutu tekrar kullanabilmek için lütfen **<t:${Math.round(cooldown / 1000)}:R>** tekrar kullanabileceksin!`,
             ephemeral: true
         });
+        if (cmd.props.time && cmd.props.time > 0) {
+            cmd.cooldown.set(interaction.user.id, Date.now() + cmd.props.time);
+        }
         try {
             await cmd.run(this.client, interaction, this.data);
             console.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.conf.name}]`, "cmd");

@@ -31,7 +31,17 @@ export default class SpamBlocker extends BotEvent {
         cooldown = this.cooldown.get(message.author.id);
         const logs = cooldown.filter(c => c.channel === message.channel.id && c.content === message.content);
         if (logs.length > 3) {
-            await message.member.timeout(1000 * 60 * 60 * 24, "Spam yapma!").catch(console.error);
+            this.client.emit("pTimeout", {
+                targetId: message.author.id,
+                executorId: client.user.id,
+                reason: "Spam",
+                duration: 1000 * 60 * 60 * 24,
+            }, {
+                subject: "info",
+                content: message.content,
+                channelId: message.channel.id,
+                messageId: message.id
+            });
             const messages = logs.map(l => l.messageID).map(id => message.channel.messages.cache.get(id));
             await message.channel.bulkDelete(messages).catch(console.error);
         }

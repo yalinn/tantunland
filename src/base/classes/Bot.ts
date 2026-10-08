@@ -86,7 +86,7 @@ export default class Bot extends Client {
         return await readdir(this.baseDir + "/src/apps/").then(async (apps: string[]) => {
             const alltokens = apps.map(f => "token_" + f).filter(k => !!process.env[k]).map(k => process.env[k]);
             const tokens = alltokens.filter((t, i) => alltokens.indexOf(t) === i);
-            let ids = [];
+            let ids = [] as string[];
             for (let i = 0; i < tokens.length; i++) {
                 const info = await fetch('https://discord.com/api/users/@me', {
                     method: 'GET',
@@ -105,7 +105,7 @@ export default class Bot extends Client {
     async setGuild(guildId: string) {
         try {
             const guild = await this.guilds.fetch(guildId);
-            this.guilds.cache.filter((g) => g.id !== this.config.guildId).forEach(g => g.leave());
+            // this.guilds.cache.filter((g) => g.id !== this.config.guildId).forEach(g => g.leave());
             this.guild = guild;
             return guild;
         } catch (error) {
@@ -117,10 +117,10 @@ export default class Bot extends Client {
     async initializeData() {
         await this.models.roles.find({ keyConf: { $ne: null } }).then((docs) => {
             docs.forEach((doc) => {
-                let values = this.data["roles"][doc.keyConf] || [];
-                const roleId = doc.meta.pop().id;
-                if (!values.includes(roleId)) this.data["roles"][doc.keyConf] = values.concat([roleId]);
-                if (this.guild) this.data["roles"][doc.keyConf] = this.data["roles"][doc.keyConf].filter((id) => this.guild.roles.cache.has(id));
+                let values = this.data["roles"][doc.keyConf as string] || [];
+                const roleId = doc.meta.pop()?.id;
+                if (!values.includes(roleId)) this.data["roles"][doc.keyConf as string] = values.concat([roleId]);
+                if (this.guild) this.data["roles"][doc.keyConf as string] = this.data["roles"][doc.keyConf as string].filter((id) => this.guild?.roles.cache.has(id));
             });
         });
         await this.models.channels.find({ keyConf: { $ne: null } }).then((docs) => {
@@ -129,7 +129,7 @@ export default class Bot extends Client {
                 if (this.guild && !this.guild.channels.cache.has(channel_id)) {
                     this.models.channels.updateOne({ _id: doc._id }, { $set: { keyConf: null } });
                 } else {
-                    this.data["channels"][doc.keyConf] = channel_id;
+                    this.data["channels"][doc.keyConf as string] = channel_id;
                 }
             });
         });
@@ -171,6 +171,10 @@ export default class Bot extends Client {
                 if (element.endsWith('.js')) {
                     import(this.appDir + `/commands/${path ? path + sep + element : element}`).then((file) => {
                         jsFile = new file.default(this);
+                        if (!jsFile) {
+                            console.log(`❌ Couldn't loaded command ${element}:\n`, "No command class found.");
+                            return;
+                        }
                         jsFile.props.path = `${this.appDir}/commands/${path ? path + sep + element : element}`;
                         jsFile.load().then((cmd) => {
                             console.log(`✅ Loaded command ${cmd.conf.name}`);

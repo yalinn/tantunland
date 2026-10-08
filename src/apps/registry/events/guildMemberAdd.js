@@ -10,7 +10,7 @@ export default class GuildMemberAdd extends BotEvent {
      */
     constructor(client) {
         super(client, {
-            name: "guildMemberAdd"
+            name: "guildMemberAdd_"
         })
         this.client = client;
     }

@@ -32,12 +32,24 @@ export default class LinkBlockerUpdate extends BotEvent {
                             await message.delete();
                         }
                         if (reklam.guild.id !== message.guild.id) {
-                            await message.member.timeout(1000 * 60 * 60 * 24, "Reklam yapma!").catch(console.error);
+                            this.client.emit("pTimeout", {
+                                targetId: message.author.id,
+                                executorId: client.user.id,
+                                reason: "Reklam",
+                                duration: 1000 * 60 * 60 * 24,
+                            }, {
+                                subject: "info",
+                                link: reklam.url,
+                                code: code,
+                                guildId: reklam.guild.id,
+                                inviter: reklam.inviterId,
+                                invitername: reklam.inviter?.tag || "Unknown",
+                                guild_name: reklam.guild.name
+                            });
                             await message.delete();
                         }
                     } catch (error) {
-                        await message.member.timeout(1000 * 60 * 60 * 24, "Reklam yapma!").catch(console.error);
-                        await message.delete();
+                        console.error(error);
                     }
                 });
             }

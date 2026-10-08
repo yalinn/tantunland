@@ -6,8 +6,8 @@ module.exports = {
     ],
     redis_prefix: process.env.redis_prefix || "ttl",
     db: {
-        mongo: process.env.mongo_url,
-        redis: process.env.redis_url,
+        mongo: process.env.mongo_url || "mongodb://localhost:27017",
+        redis: process.env.redis_url || "redis://localhost:6379",
         options: {
             authSource: process.env.mongo_auth_db || "admin",
             dbName: process.env.mongo_db || "ttl",
